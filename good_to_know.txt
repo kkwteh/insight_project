@@ -1,0 +1,9 @@
+NLTK - Natural Language Tool Kit package for Python
+
+nltk.tokenize tokenize module
+Tokenizers divide strings into lists of substrings. For example, tokenizers can be used to find the list of sentences or words in a string.
+
+nltk_lite.wordnet
+  which incorporates pywordnet and which supports WordNet 2.1. It is included in NLTK Lite.
+
+from nltk.corpus import wordnet
