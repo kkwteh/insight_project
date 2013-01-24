@@ -1,0 +1,68 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1136" measuredH="578" mockupW="871" mockupH="494">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="265" y="84" w="653" h="494" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Twitter%20/%20Search%20-%20angels%0Ahttps%3A//twitter.com/search%3Fq%3Dangels%2520sense%253A1%26src%3Dtypd</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::SearchBox" x="713" y="195" w="144" h="-1" measuredW="120" measuredH="25" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Search</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Image" x="283" y="191" w="53" h="37" measuredW="271" measuredH="186" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <src>./images.jpeg</src>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::Canvas" x="460" y="245" w="440" h="288" measuredW="100" measuredH="70" zOrder="3" locked="false" isInGroup="-1"/>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::Label" x="478" y="264" w="339" h="-1" measuredW="314" measuredH="21" zOrder="4" locked="false" isInGroup="-1">
+      <controlProperties>
+        <bold>false</bold>
+        <text>Results%20for%20*angels*%20as%20in%20VC%2C%20tech%2C%20startup%2C%20investing%2C...</text>
+      </controlProperties>
+    </control>
+    <control controlID="5" controlTypeID="com.balsamiq.mockups::Paragraph" x="478" y="290" w="236" h="19" measuredW="200" measuredH="80" zOrder="5" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>*Tweets*%20Top%20/%20%5BAll%5D</text>
+      </controlProperties>
+    </control>
+    <control controlID="6" controlTypeID="com.balsamiq.mockups::Canvas" x="478" y="309" w="404" h="74" measuredW="100" measuredH="70" zOrder="6" locked="false" isInGroup="-1"/>
+    <control controlID="7" controlTypeID="com.balsamiq.mockups::Canvas" x="478" y="393" w="404" h="74" measuredW="100" measuredH="70" zOrder="7" locked="false" isInGroup="-1"/>
+    <control controlID="8" controlTypeID="com.balsamiq.mockups::Canvas" x="478" y="478" w="404" h="46" measuredW="100" measuredH="70" zOrder="8" locked="false" isInGroup="-1"/>
+    <control controlID="9" controlTypeID="com.balsamiq.mockups::Image" x="478" y="309" w="43" h="41" measuredW="77" measuredH="79" zOrder="9" locked="false" isInGroup="-1"/>
+    <control controlID="10" controlTypeID="com.balsamiq.mockups::Image" x="478" y="393" w="43" h="41" measuredW="77" measuredH="79" zOrder="10" locked="false" isInGroup="-1"/>
+    <control controlID="11" controlTypeID="com.balsamiq.mockups::Image" x="478" y="481" w="43" h="41" measuredW="77" measuredH="79" zOrder="11" locked="false" isInGroup="-1"/>
+    <control controlID="15" controlTypeID="com.balsamiq.mockups::Canvas" x="283" y="245" w="171" h="288" measuredW="100" measuredH="70" zOrder="12" locked="false" isInGroup="-1"/>
+    <control controlID="17" controlTypeID="com.balsamiq.mockups::VerticalScrollBar" x="900" y="157" w="-1" h="394" measuredW="16" measuredH="100" zOrder="13" locked="false" isInGroup="-1"/>
+    <control controlID="19" controlTypeID="com.balsamiq.mockups::Arrow" x="900" y="281" w="-1" h="-1" measuredW="150" measuredH="100" zOrder="14" locked="false" isInGroup="-1">
+      <controlProperties>
+        <curvature>-1</curvature>
+        <direction>bottom</direction>
+        <text/>
+      </controlProperties>
+    </control>
+    <control controlID="22" controlTypeID="com.balsamiq.mockups::Paragraph" x="966" y="203" w="170" h="67" measuredW="200" measuredH="80" zOrder="15" locked="false" isInGroup="-1">
+      <controlProperties>
+        <size>24</size>
+        <text>Disambiguated%20Search</text>
+      </controlProperties>
+    </control>
+    <control controlID="23" controlTypeID="com.balsamiq.mockups::Paragraph" x="521" y="313" w="354" h="66" measuredW="200" measuredH="80" zOrder="16" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>John%20Smith%20@jsmith%0AHow%20*Angels*%20Without%20Tech%20Experience%20Can%20Vet%20Tech%20Startups%20http%3A//lnkd.in/Tv9w9s%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="25" controlTypeID="com.balsamiq.mockups::Paragraph" x="521" y="397" w="354" h="66" measuredW="200" measuredH="80" zOrder="17" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Andreas%20Wolters%20%u200F@theAndyjnee%0AA%20bit%20of%20free%20time%20today%20and%20interested%20in%20angel%20investing%3F%20It%27s%20a%20lot%2C%20but%20it%27s%20well%20worth%20it.%20@paulsingh%20http%3A//ow.ly/gY1HQ%20%20%23VC%20%23startup</text>
+      </controlProperties>
+    </control>
+    <control controlID="27" controlTypeID="com.balsamiq.mockups::Paragraph" x="521" y="485" w="346" h="33" measuredW="200" measuredH="80" zOrder="18" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Michael%20Tippett%20%u200F@mtippett%0AVancouver%20Startup%20raises%203.1%20M%24%20Without%20VC%27s%20and</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
