@@ -27,7 +27,7 @@
     </control>
     <control controlID="6" controlTypeID="com.balsamiq.mockups::Image" x="420" y="106" w="44" h="30" measuredW="271" measuredH="186" zOrder="5" locked="false" isInGroup="-1">
       <controlProperties>
-        <src>../Downloads/images.jpeg</src>
+        <src>./images.jpeg</src>
         <text/>
       </controlProperties>
     </control>
