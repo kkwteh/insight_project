@@ -1,5 +1,5 @@
 NLTK - Natural Language Tool Kit package for Python
-
+===============================================================================
 nltk.tokenize tokenize module
 Tokenizers divide strings into lists of substrings. For example, tokenizers can be used to find the list of sentences or words in a string.
 
@@ -7,3 +7,25 @@ nltk_lite.wordnet
   which incorporates pywordnet and which supports WordNet 2.1. It is included in NLTK Lite.
 
 from nltk.corpus import wordnet
+
+MongoDB
+===============================================================================
+#Activate MongoDB daemon
+$mongod
+
+PyMongo
+===============================================================================
+>>> import pymongo
+
+
+Python Twitter Tools
+===============================================================================
+
+Twitter OAuth keys
+  config.consumer_key = 'sLGccwOdfySptswo1ZKErg'
+  config.consumer_secret = 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE'
+  config.oauth_token = '101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts'
+  config.oauth_token_secret = 'ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4'
+
+>>>import twitter
+>>>t = twitter.Twitter(auth=twitter.oauth.OAuth('101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts', 'ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4', 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE', 'sLGccwOdfySptswo1ZKErg'))
