@@ -4,6 +4,9 @@ foo.py
 #pickles
 *.pkl
 
+#shell script to update repo
+update_repo.sh
+
 #information that's good to know, but constantly in flux
 good_to_know.txt
 
