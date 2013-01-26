@@ -1,4 +1,10 @@
 import twitter
+import pymongo
+from pymongo import MongoClient
+
+connection = MongoClient()
+db = connection.test_database
+tweets = db.tweets
 
 CONSUMER_KEY = 'sLGccwOdfySptswo1ZKErg'
 CONSUMER_SECRET = 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE'
@@ -10,3 +16,4 @@ iterator = twitter_stream.statuses.sample()
 
 for tweet in iterator:
     print(tweet)
+    tweets.insert(tweet)
