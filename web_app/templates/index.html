@@ -1,0 +1,21 @@
+<title>Kevin Teh - Disambiguate</title>
+
+{% extends "bootstrap_responsive.html" %}
+{% import "bootstrap_wtf.html" as wtf %}
+
+
+{% block body_content %}
+
+	<div class="container">
+	  <div class="row">
+	    <div class="span12">
+				<form method="get">
+				    <input type="text" id="q" name="q">
+				    <button type="submit" class="btn btn-primary teh">Submit</button>
+				</form>
+
+	    </div>
+	  </div>
+		<h1> {{query}} </h1>
+	</div> <!-- /container -->
+{% endblock %}
