@@ -1,6 +1,9 @@
 *.py[cod]
 foo.py
 
+#information that's good to know, but constantly in flux
+good_to_know.txt
+
 # C extensions
 *.so
 

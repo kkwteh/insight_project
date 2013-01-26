@@ -23,3 +23,7 @@ Working with tweets
 >>>twitter = Twitter(domain="search.twitter.com")
 >>>t = twitter.search(format="json", q="#gaza", lang="en")
 >>>t[u'results'] #list of tweets
+
+import unicodedata
+
+In [27]: unicodedata.normalize('NFKD', a_tweet[u'text']).encode('ascii','ignore')
