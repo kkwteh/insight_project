@@ -17,20 +17,9 @@ PyMongo
 
 Python Twitter Tools
 
-Twitter OAuth keys
-  config.consumer_key = 'sLGccwOdfySptswo1ZKErg'
-  config.consumer_secret = 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE'
-  config.oauth_token = '101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts'
-  config.oauth_token_secret = 'ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4'
+Working with tweets
 
-
->>>import twitter
->>>t = twitter.Twitter(auth=twitter.oauth.OAuth('101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts', 'ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4', 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE', 'sLGccwOdfySptswo1ZKErg'))
-
-Twitter stream class
-
->>>twitter_stream = twitter.TwitterStream(auth=twitter.oauth.OAuth('101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts', 'ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4', 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE', 'sLGccwOdfySptswo1ZKErg'))
->>>iterator = twitter_stream.statuses.sample()
-
-for tweet in iterator:
-    ...do something with this tweet...
+>>>from twitter import *
+>>>twitter = Twitter(domain="search.twitter.com")
+>>>t = twitter.search(format="json", q="#gaza", lang="en")
+>>>t[u'results'] #list of tweets
