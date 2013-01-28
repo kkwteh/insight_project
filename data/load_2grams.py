@@ -14,7 +14,6 @@ def load(number):
     output_file = '1M-2gram-' + number + '-head.csv'
     f = open(input_file,'r')
     g = open(output_file,'w')
-    write_lines = 0
     lines_read = 0
     number_and_ampersand = "[0-9&']"
     non_word_and_space = "[^\w\s]"
@@ -32,10 +31,7 @@ def load(number):
                 a[1] = re.sub(non_word_and_space,"",a[1]).lower()
                 if a[0] not in cw and a[1] not in cw:
                     g.write(string.join(a) + '\n')
-                    write_lines += 1
 
-        #if write_lines >= 1000:
-        #    break
 
     f.close()
     g.close()
