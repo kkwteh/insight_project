@@ -4,6 +4,12 @@ foo.py
 #pickles
 *.pkl
 
+#csv
+*.csv
+
+#zip
+*.zip
+
 #shell script to update repo
 update_repo.sh
 
