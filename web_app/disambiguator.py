@@ -32,8 +32,8 @@ def index():
     form = QueryForm()
     query = request.args.get('q')
     tweets = get_tweets(query)
-    count = count_words_in_tweets(tweets)
-    return render_template('index.html', form=form, query=query, tweets=tweets, count=count, len=len(count))
+    count, keys = count_words_in_tweets(tweets)
+    return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(count))
 
 
 def get_tweets(query):
@@ -52,7 +52,9 @@ def get_ascii(u_string):
     return unicodedata.normalize('NFKD', u_string).encode('ascii','ignore')
 
 def count_words_in_tweets(tweets):
-    low_information_words = ['the', 'of', 'off', 'and', 'a', 'to', 'two', 'too', 'in', 'is', 'you', 'that', 'it', 'he', 'for', 'four', 'was', 'on', 'are', 'as', 'with', 'his', 'they', 'at', 'be', 'bee', 'this', 'from', 'i', 'eye', 'have', 'or', 'ore', 'by', 'bye', 'buy', 'one', 'won', 'had', 'not', 'knot', 'but', 'what', 'all', 'were', 'where', 'when', 'we', 'there', 'their', 'can', 'an', 'your', 'which', 'witch', 'said', 'if', 'do', 'due', 'will', 'each', 'about', 'how', 'who', 'up', 'out', 'them', 'then', 'than', 'she', 'many', 'some', 'sum', 'so', 'sew', 'these', 'would', 'wood', 'other', 'into', 'has', 'more', 'her', 'like', 'him', 'see', 'sea', 'time', 'could', 'no', 'know', 'make', 'first', 'been', 'its', 'now', 'people', 'my', 'made', 'maid', 'over', 'did', 'down', 'done', 'only', 'way', 'weigh', 'find', 'fined', 'use', 'used', 'may', 'water', 'long', 'little', 'very', 'after', 'words', 'called', 'just', 'most', 'get', 'through', 'back', 'much', 'before', 'go', 'good', 'new', 'knew', 'write', 'right', 'our', 'hour', 'me', 'man', 'men', 'woman', 'women', 'any', 'day', 'same', 'look', 'think', 'also', 'around', 'another', 'came', 'come', 'work', 'three', 'word', 'must', 'because', 'does', 'part', 'even', 'place', 'well', 'such', 'here', 'hear', 'take', 'why', 'things', 'help', 'put', 'years', 'different', 'away', 'again', 'went', 'old', 'number', 'great', 'tell', 'say', 'small', 'every', 'found', 'still', 'between', 'name', 'should', 'mr.', 'mrs.', 'ms.', 'miss', 'home', 'big', 'give', 'air', 'line', 'set', 'own', 'under', 'read', 'red', 'last', 'never', 'us', 'left', 'end', 'along', 'while', 'might', 'next', 'sound', 'below', 'saw', 'something', 'thought', 'both', 'few', 'those', 'always', 'looked', 'show', 'large', 'often', 'together', 'asked', 'house', 'world', 'going', 'want', 'fuck', 'shit', 'lol', 'hate', 'u', 'got', 'okay', 'damn', 'oh', 'yall', 'amp', "'", '-', '.', '..', '...', "'.", '--', 'love', "n't", "'s", "'re", "'ve"]
+    common_many_words = 5000
+    low_information_words = top_5000[:common_many_words]
+    low_information_words.extend(['fuck', 'shit', 'lol', 'hate', 'u', 'got', 'okay', 'damn', 'oh', 'yall', 'amp', "'", '-', '.', '..', '...', "'.", '--', 'love', "n't", "'s", "'re", "'ve"])
     cnt = Counter()
     high_cnt = Counter()
 
@@ -60,9 +62,12 @@ def count_words_in_tweets(tweets):
         if re.search("RT",tweet) is None:
 
             clean_punct(tweet)
-
+            tweet = disguise_hash_marks(tweet)   #avoid quirk of word_tokenize
             words_of_tweet = word_tokenize(tweet)
+
             for word in words_of_tweet:
+
+                word = replace_hash_marks(word)
 
                 #remove all punctuation from front and back of string
                 word = re.sub("\A['-.]*", "", word)
@@ -76,11 +81,18 @@ def count_words_in_tweets(tweets):
                 elif (wn.synsets(word.lower()) == [] and
                     re.search("\A[A-Z][^A-Z]*\Z",word) is not None):
                     cnt[word] += 1
+    keys = cnt.keys()
+    keys.sort()
+    return cnt, keys
 
-    return cnt
+def disguise_hash_marks(tweet):
+    return tweet.replace("#","~")
+
+def replace_hash_marks(word):
+    return word.replace("~","#")
 
 def clean_punct(tweet):
-    safe_punct = ["'", "-", "."]
+    safe_punct = ["'", "-", ".", "#"]
     for punct in string.punctuation:
         if punct not in safe_punct:
             tweet = tweet.replace(punct,"")
@@ -88,4 +100,6 @@ def clean_punct(tweet):
 
 if '__main__' == __name__:
     twitter_search = init_twitter()
+    f = open("top_5000.pkl")
+    top_5000 = pickle.load(f)
     app.run(debug=True)
