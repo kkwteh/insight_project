@@ -31,7 +31,7 @@ def index():
 
 
 def get_tweets(query):
-    search = twitter_search.search(q=query, lang="en")
+    search = twitter_search.search(q=query, lang="en", count="100")
     return [get_ascii(t[u'text']) for t in search[u'results']]
 
 
