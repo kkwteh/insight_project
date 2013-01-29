@@ -19,10 +19,11 @@
 
 		<div class="row">
 			<div class="span6">
-				<strong> Word count (>= 2) for {{query}} </strong>
+				<strong> Word count for {{query}} </strong>
+				<br> </br>
 				<strong> Total number of words: {{len}}</strong>
 			{% for key in count %}
-		    <p class=count>{{ key }}, {{ count[key] }} </p>
+		    <p class=count>{{ key }} {{ count[key] }} </p>
 		  {% endfor %}
 			</div>
 
