@@ -18,19 +18,23 @@
 	  </div> <!-- /row -->
 
 		<div class="row">
-			<div class="span6">
+			<div class="span4">
+				<strong class=recommend> Recommendations </strong>
+			</div>
+
+			<div class="span4">
+				<strong> Results for {{query}} </strong>
+			{% for tweet in tweets %}
+		    <p class=tweet>{{ tweet }}</p>
+		  {% endfor %}
+			</div>
+
+			<div class="span4">
 				<strong> Word count for {{query}} </strong>
 				<br> </br>
 				<strong> Total number of words: {{len}}</strong>
 			{% for key in keys %}
 		    <p class=count>{{ key }} {{ count[key] }} </p>
-		  {% endfor %}
-			</div>
-
-			<div class="span6">
-				<strong> Results for {{query}} </strong>
-			{% for tweet in tweets %}
-		    <p class=tweet>{{ tweet }}</p>
 		  {% endfor %}
 			</div>
 		</div> <!-- /row -->

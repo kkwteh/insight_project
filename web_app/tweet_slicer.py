@@ -1,8 +1,11 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
+
+import twitter
+import inflect
 import pickle
 import re
 import string
-import twitter
+import sets
 import unicodedata
 from collections import Counter
 from nltk.tokenize import word_tokenize
@@ -14,10 +17,19 @@ def init_data():
     return top_twitter_words
 
 
-def slice_up(twitter_search, query):
+def init_twitter():
+    f = open("twitter_oauth.pkl")
+    cred = pickle.load(f)
+    return twitter.Twitter(domain="search.twitter.com",
+                    auth=twitter.oauth.OAuth(cred[0],cred[1],cred[2],cred[3]))
+
+
+def slice_up(query):
+    twitter_search = init_twitter()
     top_twitter_words = init_data()
     tweets = get_tweets(twitter_search, query)
-    count, keys = count_words_in_tweets(query, tweets, top_twitter_words)
+    split_tweets = clean_tweets(tweets)
+    count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
     pickle_top_words(query, keys)
     return tweets, count, keys
 
@@ -34,8 +46,21 @@ def get_tweets(twitter_search, query):
     return tweets
 
 
-def count_words_in_tweets(query, tweets):
-    pass
+def clean_tweets(tweets):
+    split_tweets = sets.Set()
+    for tweet in tweets:
+        tweet = re.sub("\ART", "", tweet)           #RT indicator
+        tweet = re.sub("@\w*", "", tweet)           #@names
+        tweet = re.sub("#\w*", "", tweet)           #hashtags
+        tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not periods
+        clean_punct(tweet)
+        split_tweets.add(tuple(word_tokenize(tweet)))
+
+    for split_tweet in split_tweets:
+        for word in split_tweet:
+            word = re.sub("\A['-\.]*", "", word)
+            word = re.sub("['-\.]*\Z", "", word)
+    return list(split_tweets)
 
 
 def pickle_top_words(query, keys):
@@ -45,52 +70,39 @@ def pickle_top_words(query, keys):
     o.close()
 
 
-def count_words_in_tweets(query, tweets, top_twitter_words):
-    common_many_words = 5000
+def count_words_in_tweets(query, split_tweets, top_twitter_words):
+    common_many_words = 3000
     pairs = top_twitter_words[:common_many_words]
     low_information_words = [x[0] for x in pairs]
     cnt = Counter()
     high_cnt = Counter()
 
-    for tweet in tweets:
-        clean_punct(tweet)
-        tweet = disguise_hash_marks(tweet)   #avoid quirk of word_tokenize
-        words_of_tweet = word_tokenize(tweet)
-
-        for word in words_of_tweet:
-
-            word = replace_hash_marks(word)
-
-            #remove all punctuation from front and back of string
-            word = re.sub("\A['-.]*", "", word)
-            word = re.sub("['-.]*\Z", "", word)
-
+    for split_tweet in split_tweets:
+        for word in split_tweet:
             #store words that are a) not low information words and do not
             #contain numbers and are not the query itself and
             #b) wn knows about or begin with a single
             #capital letter
+            word
             if (word.lower() not in low_information_words and
                 re.search("[0-9]",word) is None and
-                word.lower() != query):
-                if wn.synsets(word.lower()) != []:
+                word.lower() not in relatives(query.lower())):
+                if wn.synsets(word) != []:
                     cnt[word.lower()] += 1
                 elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
-                    cnt[word] += 1
+                    cnt[word.lower()] += 1
+
     keys = [key for key in cnt if cnt[key] >= 2]
     keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
 
-
-def disguise_hash_marks(tweet):
-    return tweet.replace("#","~")
-
-
-def replace_hash_marks(word):
-    return word.replace("~","#")
+def relatives(query):
+        infl = inflect.engine()
+        return [query, infl.singular_noun(query), infl.plural(query)]
 
 
 def clean_punct(tweet):
-    safe_punct = ["'", "-", ".", "#"]
+    safe_punct = ["'", "-"]
     for punct in string.punctuation:
         if punct not in safe_punct:
             tweet = tweet.replace(punct,"")
