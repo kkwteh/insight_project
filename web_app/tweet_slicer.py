@@ -14,7 +14,20 @@ def init_data():
     return top_twitter_words
 
 
-def slice_up(twitter_search, query):
+def init_twitter():
+    CONSUMER_KEY = 'sLGccwOdfySptswo1ZKErg'
+    CONSUMER_SECRET = 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE'
+    oauth_token = "101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts"
+    oauth_secret = "ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4"
+    return twitter.Twitter(domain="search.twitter.com",
+                            auth=twitter.oauth.OAuth(oauth_token,
+                                                oauth_secret,
+                                                CONSUMER_KEY,
+                                                CONSUMER_SECRET))
+
+
+def slice_up(query):
+    twitter_search = init_twitter()
     top_twitter_words = init_data()
     tweets = get_tweets(twitter_search, query)
     count, keys = count_words_in_tweets(query, tweets, top_twitter_words)
@@ -34,8 +47,9 @@ def get_tweets(twitter_search, query):
     return tweets
 
 
-def count_words_in_tweets(query, tweets):
+def uniqify_tweets(tweets):
     pass
+
 
 
 def pickle_top_words(query, keys):
