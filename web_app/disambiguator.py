@@ -33,15 +33,26 @@ def index():
     query = request.args.get('q')
     tweets = get_tweets(query)
     count, keys = count_words_in_tweets(tweets)
-    return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(count))
+    pickle_top_words(query, keys)
+    return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(keys))
+
+
+def pickle_top_words(query, keys):
+    most_cooccuring = 20
+    o = open("query_"+query+".pkl","wb")
+    pickle.dump(keys[:most_cooccuring], o, -1)
+    o.close()
 
 
 def get_tweets(query):
     tweets = []
     num_pages = 16
     for i in range(1,num_pages):
-        search = twitter_search.search(q=query, lang="en", page=str(i))
-        tweets.extend([get_ascii(t[u'text']) for t in search[u'results']])
+        search = twitter_search.search(q=query, lang="en", page=str(i), rpp=100)
+        for t in search[u'results']:
+            ascii = get_ascii(t[u'text'])
+            if re.search("RT",ascii) is None:
+                tweets.append(ascii)
     return tweets
 
 
@@ -59,8 +70,6 @@ def count_words_in_tweets(tweets):
     high_cnt = Counter()
 
     for tweet in tweets:
-        #if re.search("RT",tweet) is None:
-
         clean_punct(tweet)
         tweet = disguise_hash_marks(tweet)   #avoid quirk of word_tokenize
         words_of_tweet = word_tokenize(tweet)
@@ -80,8 +89,8 @@ def count_words_in_tweets(tweets):
                     cnt[word.lower()] += 1
                 elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
                     cnt[word] += 1
-    keys = cnt.keys()
-    keys.sort()
+    keys = [key for key in cnt if cnt[key] >= 2]
+    keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
 
 def disguise_hash_marks(tweet):
