@@ -53,33 +53,32 @@ def get_ascii(u_string):
 
 def count_words_in_tweets(tweets):
     common_many_words = 5000
-    low_information_words = top_5000[:common_many_words]
-    low_information_words.extend(['fuck', 'shit', 'lol', 'hate', 'u', 'got', 'okay', 'damn', 'oh', 'yall', 'amp', "'", '-', '.', '..', '...', "'.", '--', 'love', "n't", "'s", "'re", "'ve"])
+    pairs = top_twitter_words[:common_many_words]
+    low_information_words = [x[0] for x in pairs]
     cnt = Counter()
     high_cnt = Counter()
 
     for tweet in tweets:
-        if re.search("RT",tweet) is None:
+        #if re.search("RT",tweet) is None:
 
-            clean_punct(tweet)
-            tweet = disguise_hash_marks(tweet)   #avoid quirk of word_tokenize
-            words_of_tweet = word_tokenize(tweet)
+        clean_punct(tweet)
+        tweet = disguise_hash_marks(tweet)   #avoid quirk of word_tokenize
+        words_of_tweet = word_tokenize(tweet)
 
-            for word in words_of_tweet:
+        for word in words_of_tweet:
 
-                word = replace_hash_marks(word)
+            word = replace_hash_marks(word)
 
-                #remove all punctuation from front and back of string
-                word = re.sub("\A['-.]*", "", word)
-                word = re.sub("['-.]*\Z", "", word)
+            #remove all punctuation from front and back of string
+            word = re.sub("\A['-.]*", "", word)
+            word = re.sub("['-.]*\Z", "", word)
 
-                #store words that wn knows about or begin with a single capital
-                #letter
-                if (wn.synsets(word.lower()) != [] and
-                word.lower() not in low_information_words):
+            #store words that wn knows about or begin with a single capital
+            #letter
+            if word.lower() not in low_information_words:
+                if wn.synsets(word.lower()) != []:
                     cnt[word.lower()] += 1
-                elif (wn.synsets(word.lower()) == [] and
-                    re.search("\A[A-Z][^A-Z]*\Z",word) is not None):
+                elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
                     cnt[word] += 1
     keys = cnt.keys()
     keys.sort()
@@ -100,6 +99,6 @@ def clean_punct(tweet):
 
 if '__main__' == __name__:
     twitter_search = init_twitter()
-    f = open("top_5000.pkl")
-    top_5000 = pickle.load(f)
+    f = open("top_twitter_words.pkl")
+    top_twitter_words = pickle.load(f)
     app.run(debug=True)
