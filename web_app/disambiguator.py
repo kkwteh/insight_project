@@ -52,7 +52,7 @@ def get_ascii(u_string):
     return unicodedata.normalize('NFKD', u_string).encode('ascii','ignore')
 
 def count_words_in_tweets(tweets):
-    common_many_words = 200
+    common_many_words = 5000
     low_information_words = top_5000[:common_many_words]
     low_information_words.extend(['fuck', 'shit', 'lol', 'hate', 'u', 'got', 'okay', 'damn', 'oh', 'yall', 'amp', "'", '-', '.', '..', '...', "'.", '--', 'love', "n't", "'s", "'re", "'ve"])
     cnt = Counter()
@@ -80,8 +80,6 @@ def count_words_in_tweets(tweets):
                 elif (wn.synsets(word.lower()) == [] and
                     re.search("\A[A-Z][^A-Z]*\Z",word) is not None):
                     cnt[word] += 1
-                elif re.search("\A#",word) is not None:
-                    cnt[word.lower()] += 1
     keys = cnt.keys()
     keys.sort()
     return cnt, keys
