@@ -1,34 +1,44 @@
-#!/usr/local/bin/python
+#!/Users/teh/code/insight_project/ENV/bin/python
 import pickle
 import sys
 import twitter
 import itertools
+import networkx as nx
 
 def init_data(query):
     f = open("query_" + query + ".pkl", "r")
     top_results = pickle.load(f)
     f.close()
-    pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
-    return pairs
+    return top_results
 
 
 def init_twitter():
     return twitter.Twitter(domain="search.twitter.com")
 
 
-def compute_distances(query, pairs, searcher):
-    distance_matrix = {}
+def compute_graph(query, top_results, searcher):
+    G = nx.Graph()
+    G.add_nodes_from(top_results)
+    pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
     for w1, w2 in pairs:
         triple = query + " " + w1 + " " + w2
         s = searcher.search(q=triple, lang="en")
         print len(s[u'results'])
-        d = 1.0/(0.1 + len(s[u'results']))
-        distance_matrix[(w1,w2)] = d
-    return distance_matrix
+        if len(s[u'results']) >= 8:
+            G.add_edge(w1, w2, weight=1)
+    return G
 
 def pickle_data(data, o_name):
     g = open(o_name, "wb")
     pickle.dump(data, g, -1)
+
+
+def analyze(query):
+    top_results = init_data(query)
+    searcher = init_twitter()
+    G = compute_graph(query, top_results, searcher)
+    pickle_data(G, "graph_" + query + ".pkl")
+
 
 def main():
     args = sys.argv[1:]
@@ -38,11 +48,7 @@ def main():
         sys.exit(1)
 
     query = args[0]
-    pairs = init_data(query)
-    searcher = init_twitter()
-    distance_matrix = compute_distances(query, pairs, searcher)
-    pickle_data(distance_matrix, "distances_" + query + ".pkl")
-
+    analyze(query)
 
 if __name__ == '__main__':
     main()
