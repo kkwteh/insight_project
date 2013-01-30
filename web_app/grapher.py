@@ -32,18 +32,13 @@ def pickle_data(data, o_name):
     g = open(o_name, "wb")
     pickle.dump(data, g, -1)
 
-def display_graph(G):
-    import matplotlib.pyplot as plt
-    nx.draw(G)
-    plt.show()
-
 
 def analyze(query):
     top_results = init_data(query)
     searcher = init_twitter()
     G = compute_graph(query, top_results, searcher)
     pickle_data(G, "graph_" + query + ".pkl")
-    display_graph(G)
+
 
 def main():
     args = sys.argv[1:]

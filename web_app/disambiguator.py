@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding=utf8
 
+import grapher
 import pdb
 import pickle
 import re
@@ -15,6 +16,7 @@ from flask.ext.wtf import Form, TextField, HiddenField, ValidationError,\
 from flask import request
 from nltk.tokenize import word_tokenize
 from nltk.corpus import wordnet as wn
+
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -31,9 +33,15 @@ class QueryForm(Form):
 def index():
     form = QueryForm()
     query = request.args.get('q')
-    tweets = get_tweets(query)
-    count, keys = count_words_in_tweets(tweets)
-    pickle_top_words(query, keys)
+    tweets = []
+    count = {}
+    keys = []
+    if query is not None:
+        tweets = get_tweets(query)
+        count, keys = count_words_in_tweets(query, tweets)
+        pickle_top_words(query, keys)
+        grapher.analyze(query)
+
     return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(keys))
 
 
@@ -57,12 +65,20 @@ def get_tweets(query):
 
 
 def init_twitter():
-    return twitter.Twitter(domain="search.twitter.com")
+    CONSUMER_KEY = 'sLGccwOdfySptswo1ZKErg'
+    CONSUMER_SECRET = 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE'
+    oauth_token = "101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts"
+    oauth_secret = "ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4"
+    return twitter.Twitter(domain="search.twitter.com",
+                            auth=twitter.oauth.OAuth(oauth_token,
+                                                oauth_secret,
+                                                CONSUMER_KEY,
+                                                CONSUMER_SECRET))
 
 def get_ascii(u_string):
     return unicodedata.normalize('NFKD', u_string).encode('ascii','ignore')
 
-def count_words_in_tweets(tweets):
+def count_words_in_tweets(query, tweets):
     common_many_words = 5000
     pairs = top_twitter_words[:common_many_words]
     low_information_words = [x[0] for x in pairs]
@@ -83,10 +99,12 @@ def count_words_in_tweets(tweets):
             word = re.sub("['-.]*\Z", "", word)
 
             #store words that are a) not low information words and do not
-            #contain numbers and b) wn knows about or begin with a single
+            #contain numbers and are not the query itself and
+            #b) wn knows about or begin with a single
             #capital letter
             if (word.lower() not in low_information_words and
-                re.search("[0-9]",word) is None):
+                re.search("[0-9]",word) is None and
+                word.lower() != query):
                 if wn.synsets(word.lower()) != []:
                     cnt[word.lower()] += 1
                 elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
@@ -95,11 +113,14 @@ def count_words_in_tweets(tweets):
     keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
 
+
 def disguise_hash_marks(tweet):
     return tweet.replace("#","~")
 
+
 def replace_hash_marks(word):
     return word.replace("~","#")
+
 
 def clean_punct(tweet):
     safe_punct = ["'", "-", ".", "#"]
