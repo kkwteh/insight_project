@@ -1,5 +1,6 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 
+import numpy as np
 import twitter
 import inflect
 import pickle
@@ -30,7 +31,7 @@ def slice_up(query):
     tweets = get_tweets(twitter_search, query)
     split_tweets = clean_tweets(tweets)
     count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
-    pickle_top_words(query, keys)
+    pickle_top_words(query, count, keys)
     return tweets, count, keys
 
 
@@ -53,7 +54,7 @@ def clean_tweets(tweets):
         tweet = re.sub("@\w*", "", tweet)           #@names
         tweet = re.sub("#\w*", "", tweet)           #hashtags
         tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not periods
-        clean_punct(tweet)
+        tweet = clean_punct(tweet)
         split_tweets.add(tuple(word_tokenize(tweet)))
 
     for split_tweet in split_tweets:
@@ -63,10 +64,12 @@ def clean_tweets(tweets):
     return list(split_tweets)
 
 
-def pickle_top_words(query, keys):
-    most_cooccuring = 20
+def pickle_top_words(query, count, keys):
+    just_counts = [count[key] for key in keys]
+    a = np.array(just_counts)
+    frequent_keys = [key for key in keys if count[keys] > np.percentile(a,88)]
     o = open("query_"+query+".pkl","wb")
-    pickle.dump(keys[:most_cooccuring], o, -1)
+    pickle.dump(frequent_keys, o, -1)
     o.close()
 
 
@@ -106,6 +109,7 @@ def clean_punct(tweet):
     for punct in string.punctuation:
         if punct not in safe_punct:
             tweet = tweet.replace(punct,"")
+    return tweet
 
 
 def get_ascii(u_string):
