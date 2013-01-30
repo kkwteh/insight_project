@@ -82,9 +82,11 @@ def count_words_in_tweets(tweets):
             word = re.sub("\A['-.]*", "", word)
             word = re.sub("['-.]*\Z", "", word)
 
-            #store words that wn knows about or begin with a single capital
-            #letter
-            if word.lower() not in low_information_words:
+            #store words that are a) not low information words and do not
+            #contain numbers and b) wn knows about or begin with a single
+            #capital letter
+            if (word.lower() not in low_information_words and
+                re.search("[0-9]",word) is None):
                 if wn.synsets(word.lower()) != []:
                     cnt[word.lower()] += 1
                 elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
