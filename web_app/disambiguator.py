@@ -23,7 +23,7 @@ class QueryForm(Form):
 @app.route('/')
 def index():
     form = QueryForm()
-    query = request.args.get('q')
+    query = request.args.get('q').lower()
     tweets = []
     count = {}
     keys = []
