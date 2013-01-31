@@ -37,13 +37,14 @@ def slice_up(query):
 
 def get_tweets(twitter_search, query):
     tweets = []
-    num_pages = 16
+    num_pages = 2
     for i in range(1,num_pages):
         search = twitter_search.search(q=query, lang="en", page=str(i), rpp=100)
         for t in search[u'results']:
             ascii = get_ascii(t[u'text'])
             if re.search("RT",ascii) is None:
                 tweets.append(ascii)
+    print("Got tweets")
     return tweets
 
 
@@ -67,7 +68,10 @@ def clean_tweets(tweets):
 def pickle_top_words(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    frequent_keys = [key for key in keys if count[keys] > np.percentile(a,88)]
+    total_candidates = 10
+    complement_percentile = (1.0 * total_candidates)/len(a)
+    frequent_keys = [key for key in keys if count[key] > np.percentile(a,
+                                                100*(1-complement_percentile))]
     o = open("query_"+query+".pkl","wb")
     pickle.dump(frequent_keys, o, -1)
     o.close()
@@ -94,8 +98,7 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
                     cnt[word.lower()] += 1
                 elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
                     cnt[word.lower()] += 1
-
-    keys = [key for key in cnt if cnt[key] >= 2]
+    keys = [key for key in cnt]
     keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
 
