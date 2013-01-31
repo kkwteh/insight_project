@@ -1,6 +1,7 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 import tweet_slicer
 import heavy_edger
+import light_edger
 import pickle
 import sys
 import itertools
@@ -20,8 +21,9 @@ def pickle_data(data, o_name):
 
 def analyze(query, tweets):
     top_results = init_data(query)
-    G = heavy_edger.compute_graph(query, top_results, tweets)
+    G = light_edger.compute_graph(query, top_results, tweets)
     pickle_data(G, "graph_" + query + ".pkl")
+    return [comp for comp in connected_components(G) if len(comp) >= 2]
 
 
 def main():

@@ -3,6 +3,7 @@
 
 import grapher
 import tweet_slicer
+#import recommender
 from flask import Flask, render_template
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form, TextField, HiddenField, ValidationError,\
@@ -31,7 +32,8 @@ def index():
     keys = []
     if query is not None:
         tweets, count, keys = tweet_slicer.slice_up(query)
-        grapher.analyze(query, tweets)
+        components = grapher.analyze(query, tweets)
+        #recommender.find(components)
 
     return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(keys))
 
