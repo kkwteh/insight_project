@@ -1,8 +1,9 @@
-#!/usr/bin/env python
+#!/Users/teh/code/insight_project/ENV/bin/python
 # coding=utf8
 
 import grapher
 import tweet_slicer
+import recommender
 from flask import Flask, render_template
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form, TextField, HiddenField, ValidationError,\
@@ -23,15 +24,23 @@ class QueryForm(Form):
 @app.route('/')
 def index():
     form = QueryForm()
-    query = request.args.get('q').lower()
+    query = request.args.get('q')
     tweets = []
     count = {}
     keys = []
+    recommendations = []
     if query is not None:
+        query = tweet_slicer.get_ascii(query.lower())
         tweets, count, keys = tweet_slicer.slice_up(query)
-        grapher.analyze(query)
+        cliques = grapher.analyze(query, tweets)
+        recommendations = recommender.find(query, cliques)
 
-    return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(keys))
+    return render_template('index.html', form=form, query=query, tweets=tweets,         count=count, keys=keys, len=len(keys), recommendations=recommendations)
+
+@app.route('/graph')
+def graph():
+    query = request.args.get('q')
+    return render_template('graph.html',query=query)
 
 if '__main__' == __name__:
     app.run(debug=True)

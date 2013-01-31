@@ -1,7 +1,9 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
+import tweet_slicer
+import heavy_edger
+import light_edger
 import pickle
 import sys
-import twitter
 import itertools
 import networkx as nx
 
@@ -12,33 +14,22 @@ def init_data(query):
     return top_results
 
 
-def init_twitter():
-    return twitter.Twitter(domain="search.twitter.com")
-
-
-def compute_graph(query, top_results, searcher):
-    G = nx.Graph()
-    G.add_nodes_from(top_results)
-    pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
-    for w1, w2 in pairs:
-        triple = query + " " + w1 + " " + w2
-        s = searcher.search(q=triple, lang="en")
-        print len(s[u'results'])
-        if len(s[u'results']) >= 8:
-            G.add_edge(w1, w2, weight=1)
-    return G
-
 def pickle_data(data, o_name):
     g = open(o_name, "wb")
     pickle.dump(data, g, -1)
 
 
-def analyze(query):
+def analyze(query, tweets):
     top_results = init_data(query)
-    searcher = init_twitter()
-    G = compute_graph(query, top_results, searcher)
+    G = light_edger.compute_graph(query, top_results, tweets)
     pickle_data(G, "graph_" + query + ".pkl")
-
+    sundry = [comp for comp in nx.connected_components(G) if len(comp) >= 2]
+    cliques = []
+    for comp in sundry:
+        g = nx.find_cliques(G.subgraph(comp))
+        c = g.next()[:3]
+        cliques.append(c)
+    return cliques
 
 def main():
     args = sys.argv[1:]
