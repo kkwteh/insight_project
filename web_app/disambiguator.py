@@ -35,7 +35,12 @@ def index():
         cliques = grapher.analyze(query, tweets)
         recommendations = recommender.find(query, cliques)
 
-    return render_template('index.html', form=form, query=query, tweets=tweets, count=count, keys=keys, len=len(keys), recommendations=recommendations)
+    return render_template('index.html', form=form, query=query, tweets=tweets,         count=count, keys=keys, len=len(keys), recommendations=recommendations)
+
+@app.route('/graph')
+def graph():
+    query = request.args.get('q')
+    return render_template('graph.html',query=query)
 
 if '__main__' == __name__:
     app.run(debug=True)

@@ -7,6 +7,13 @@
 {% block body_content %}
 
 	<div class="container">
+
+		<div class="navbar navbar-inverse navbar-fixed-top">
+		  <div class="navbar-inner">
+		    <a class="brand" href="/">Twitter Search</a>
+		  </div>
+		</div>
+
 	  <div class="row">
 	    <div class="span4 offset4">
 				<form method="get">
@@ -19,10 +26,15 @@
 
 		<div class="row">
 			<div class="span4">
-				<strong class=recommend> Recommendations </strong>
-				{% for tweet in recommendations %}
-			    <p class=tweet>{{ tweet }}</p>
+				<strong> Did you mean {{query}} as in: </strong>
+				{% for clique_query, tweet in recommendations %}
+					<p>
+						<a class="pretty-link" href="/?q={{clique_query}}">{{ tweet }}</a>
+					</p>
 			  {% endfor %}
+				<p>
+					<a class="pretty-link" href="/graph?q={{query}}">How were these suggestions generated?</a>
+				</p>
 			</div>
 
 			<div class="span4">
@@ -42,4 +54,5 @@
 			</div>
 		</div> <!-- /row -->
 	</div> <!-- /container -->
+
 {% endblock %}
