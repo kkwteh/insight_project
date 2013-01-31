@@ -20,13 +20,16 @@
 		<div class="row">
 			<div class="span4">
 				<strong class=recommend> Recommendations </strong>
+				{% for tweet in recommendations %}
+			    <p class=tweet>{{ tweet }}</p>
+			  {% endfor %}
 			</div>
 
 			<div class="span4">
 				<strong> Results for {{query}} </strong>
-			{% for tweet in tweets %}
-		    <p class=tweet>{{ tweet }}</p>
-		  {% endfor %}
+				{% for tweet in tweets %}
+			    <p class=tweet>{{ tweet }}</p>
+			  {% endfor %}
 			</div>
 
 			<div class="span4">
