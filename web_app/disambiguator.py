@@ -26,15 +26,21 @@ class QueryForm(Form):
 def index():
     form = QueryForm()
     query = request.args.get('q')
+
+    if request.args.get('recs') == "False":
+        wants_recs = False
+    else:
+        wants_recs = True
+
     (jsonG, count, tweets, keys, cliques, recommendations, G) = (None, {} ,
                              [],[],[],[],[])
 
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
-        cliques, G = grapher.analyze(query, tweets, count, top_results)
-        recommendations = recommender.find(query, cliques)
-
+        if wants_recs:
+            cliques, G = grapher.analyze(query, tweets, count, top_results)
+            recommendations = recommender.find(query, cliques)
 
     return render_template('index.html', form=form, query=query, tweets=tweets,
                             count=count, keys=keys, len=len(keys),

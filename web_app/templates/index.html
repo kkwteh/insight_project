@@ -5,7 +5,7 @@
 
 
 {% block body_content %}
-
+	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 	<div class="container">
 
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -14,37 +14,42 @@
 		  </div>
 		</div>
 
-	  <div class="row">
-	    <div class="span4 offset4">
-				<form method="get">
-				    <input type="text" id="q" name="q" autocomplete="off">
-				    <button type="submit" class="btn btn-primary teh">Search</button>
-				</form>
 
-	    </div>
-	  </div> <!-- /row -->
+		<div class = "hero-unit jumbotron">
+			<h1>See what's happening <strong> right now </strong></h1>
+			<form method="get">
+			    <input type="text" id="q" name="q" autocomplete="off">
+			    <button type="submit" class="btn btn-primary teh">Search</button>
+			</form>
+		</div>
 
 		<div class="row">
 			<div class="span4">
-				<strong> Did you mean {{query}} as in: </strong>
+				{% if recommendations != [] %}
+				<h2 class="column_title">
+					Did you mean <strong>{{query}}</strong> as in:
+				</h2>
 				{% for clique_query, tweet in recommendations %}
 					<p>
-						<a class="pretty-link" href="/?q={{clique_query}}">{{ tweet }}</a>
+						<a class="pretty-link" href="/?q={{clique_query}}&recs=False">{{ tweet }}</a>
 					</p>
 			  {% endfor %}
-				<p>
+				<p><strong>
 					<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
-				</p>
+				</strong></p>
+				{% endif %}
 			</div>
 
 			<div class="span4">
-				<strong> Results for {{query}} </strong>
+				{% if tweets != [] %}
+				<h2 class="column_title"> Results for <strong>{{query}}</strong> </h2>
 				{% for tweet in tweets %}
-			    <p class=tweet>{{ tweet }}</p>
+			    <p class="main_result">{{ tweet }}</p>
 			  {% endfor %}
+				{% endif %}
 			</div>
 
-			<div class="span4">
+			<div class="span3">
 				<strong> Word count for {{query}} </strong>
 				<br> </br>
 				<strong> Total number of words: {{len}}</strong>

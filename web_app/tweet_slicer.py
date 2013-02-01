@@ -33,12 +33,19 @@ def init_twitter():
 def slice_up(query):
     twitter_search = init_twitter()
     top_twitter_words = init_data()
-    pages = get_pages_of_tweets(twitter_search, query, num_pages=15)
+    pages = get_pages_of_tweets(twitter_search, query, num_pages=5)
+    print "finished download"
     full_tweets = flatten(pages)
+    print "flattened pages"
     tweets = [get_ascii(t[u'text']) for t in full_tweets]
+    print "got tweets"
     split_tweets = clean_tweets(tweets)
+    print "cleaned tweets"
+    ##count words is timeconsuming
     count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
+    print "counted words"
     top_results = extract_top_results(query, count, keys)
+    print "extracted top results"
     return tweets, count, keys, top_results
 
 def flatten(pages):
@@ -174,7 +181,9 @@ class TweetDownloader(threading.Thread):
                 print "Failed to process page_num: ", page_num
 
 
-def get_pages_of_tweets(twitter_search, query, num_pages, num_threads=15):
+def get_pages_of_tweets(twitter_search, query, num_pages, num_threads=None):
+    if num_threads is None:
+        num_threads = num_pages
     """ Download 'num_pages' pages from Twitter api.
     These documents are downloaded in parallel using
     separate threads

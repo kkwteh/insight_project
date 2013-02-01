@@ -20,7 +20,7 @@ def analyze(query, tweets, count, top_results):
         all_chained.extend(comp)
 
     total_words = sum([count[key] for key in count])
-    gt_one_percent = [[key] for key in count if (count[key] >= 0.1*total_words
+    gt_one_percent = [[key] for key in count if (count[key] >= 0.04*total_words
                                             and key not in all_chained)]
     cliques.extend(gt_one_percent)
     return cliques, jsony(G)
