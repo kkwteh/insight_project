@@ -17,6 +17,6 @@ def compute_graph(query, top_results, tweets):
                 break
 
     for node in G.nodes():
-        if G.degree(node) > 1000:
+        if G.degree(node) > 10:
             G.remove_node(node)
     return G
