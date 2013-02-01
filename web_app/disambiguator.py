@@ -32,7 +32,7 @@ def index():
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
-        cliques, G = grapher.analyze(query, tweets, top_results)
+        cliques, G = grapher.analyze(query, tweets, count, top_results)
         recommendations = recommender.find(query, cliques)
 
 

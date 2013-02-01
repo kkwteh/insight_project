@@ -88,7 +88,7 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
             word
             if (word.lower() not in low_information_words and
                 re.search("[0-9]",word) is None and
-                word.lower() not in relatives(query.lower())):
+                related(word.lower(),query.lower()) is not True):
                 if wn.synsets(word) != []:
                     cnt[word.lower()] += 1
                 elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
@@ -97,9 +97,12 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
     keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
 
-def relatives(query):
-        infl = inflect.engine()
-        return [query, infl.singular_noun(query), infl.plural(query)]
+def related(word1, word2):
+        if (re.search(word1, word2) is None and
+             re.search(word2, word1) is None):
+            return False
+        else:
+            return True
 
 
 def clean_punct(tweet):
