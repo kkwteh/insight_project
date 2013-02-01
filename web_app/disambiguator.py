@@ -33,20 +33,17 @@ def index():
         query = tweet_slicer.get_ascii(query.lower())
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         cliques, G = grapher.analyze(query, tweets, top_results)
-        jsonG = json.dumps(G)
         recommendations = recommender.find(query, cliques)
 
 
     return render_template('index.html', form=form, query=query, tweets=tweets,
                             count=count, keys=keys, len=len(keys),
-                            recommendations=recommendations, graph=jsonG)
+                            recommendations=recommendations, graph=G)
 
 @app.route('/graph')
 def graph():
-    G = json.loads(request.args.get('G'))
-    vertices = G[0]
-    edges = G[1]
-    return render_template('graph.html', vertices=vertices, edges=edges)
+    G = request.args.get('G')
+    return render_template('graph.html', graph=G)
 
 if '__main__' == __name__:
     app.run(debug=True)
