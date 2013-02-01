@@ -31,7 +31,7 @@
 				</h2>
 				{% for clique_query, tweet in recommendations %}
 					<p>
-						<a class="pretty-link" href="/?q={{clique_query}}&recs=False">{{ tweet }}</a>
+						<a class="pretty-link" href="/?q={{clique_query}}&recs=False">This tweet:</a> {{ tweet }}
 					</p>
 			  {% endfor %}
 				<p><strong>
@@ -49,6 +49,7 @@
 				{% endif %}
 			</div>
 
+			{% if debug == True %}
 			<div class="span3">
 				<strong> Word count for {{query}} </strong>
 				<br> </br>
@@ -57,7 +58,14 @@
 		    <p class=count>{{ key }} {{ count[key] }} </p>
 		  {% endfor %}
 			</div>
+			{% endif %}
 		</div> <!-- /row -->
 	</div> <!-- /container -->
+
+  <div id="footer">
+    <div class="container">
+      <p class="muted credit">Designed and built by Kevin Teh.</p>
+    </div>
+  </div>
 
 {% endblock %}
