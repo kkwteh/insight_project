@@ -71,7 +71,7 @@ def clean_tweets(tweets):
 def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 100
+    max_candidates = 50
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
     top_results = [key for key in keys if count[key] > np.percentile(a,
@@ -135,7 +135,7 @@ def download_page(twitter_search, query, page_num):
             return page
     except (twitter.TwitterError):
         print "Failed to get page"
-        raise
+        return None
 
 class TweetDownloader(threading.Thread):
     """ A class to download a user's top Artists
@@ -179,6 +179,7 @@ class TweetDownloader(threading.Thread):
                 # not joining on the queue
             except:
                 print "Failed to process page_num: ", page_num
+                raise
 
 
 def get_pages_of_tweets(twitter_search, query, num_pages, num_threads=None):

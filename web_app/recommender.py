@@ -6,7 +6,7 @@ def find(query, cliques):
     recommendations = []
     for c in cliques:
         c.append(query)
-        clique_query = "%20".join(c)
+        clique_query = " ".join(c)
         search_data = searcher.search(q=clique_query, lang="en", rpp=1)
         print clique_query
         if search_data[u'results'] != []:
