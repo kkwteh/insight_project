@@ -4,7 +4,6 @@ import string
 from collections import Counter
 from nltk.tokenize import word_tokenize
 import pickle
-import pdb
 import unicodedata
 import re
 from nltk.corpus import wordnet as wn

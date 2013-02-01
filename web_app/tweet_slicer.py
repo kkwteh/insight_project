@@ -7,6 +7,7 @@ import twitter
 import inflect
 import pickle
 import re
+import os
 import string
 import sets
 import unicodedata
@@ -37,8 +38,8 @@ def slice_up(query):
     tweets = [get_ascii(t[u'text']) for t in full_tweets]
     split_tweets = clean_tweets(tweets)
     count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
-    pickle_top_words(query, count, keys)
-    return tweets, count, keys
+    top_results = extract_top_results(query, count, keys)
+    return tweets, count, keys, top_results
 
 def flatten(pages):
     return list(itertools.chain.from_iterable(pages))
@@ -60,17 +61,15 @@ def clean_tweets(tweets):
     return list(split_tweets)
 
 
-def pickle_top_words(query, count, keys):
+def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
     max_candidates = 100
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
-    frequent_keys = [key for key in keys if count[key] > np.percentile(a,
+    top_results = [key for key in keys if count[key] > np.percentile(a,
                                                             percentile)]
-    o = open("query_"+query+".pkl","wb")
-    pickle.dump(frequent_keys, o, -1)
-    o.close()
+    return top_results
 
 
 def count_words_in_tweets(query, split_tweets, top_twitter_words):

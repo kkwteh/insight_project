@@ -4,6 +4,7 @@
 import grapher
 import tweet_slicer
 import recommender
+import json
 from flask import Flask, render_template
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.wtf import Form, TextField, HiddenField, ValidationError,\
@@ -25,22 +26,27 @@ class QueryForm(Form):
 def index():
     form = QueryForm()
     query = request.args.get('q')
-    tweets = []
-    count = {}
-    keys = []
-    recommendations = []
+    (jsonG, count, tweets, keys, cliques, recommendations, G) = (None, {} ,
+                             [],[],[],[],[])
+
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
-        tweets, count, keys = tweet_slicer.slice_up(query)
-        cliques = grapher.analyze(query, tweets)
+        tweets, count, keys, top_results = tweet_slicer.slice_up(query)
+        cliques, G = grapher.analyze(query, tweets, top_results)
+        jsonG = json.dumps(G)
         recommendations = recommender.find(query, cliques)
 
-    return render_template('index.html', form=form, query=query, tweets=tweets,         count=count, keys=keys, len=len(keys), recommendations=recommendations)
+
+    return render_template('index.html', form=form, query=query, tweets=tweets,
+                            count=count, keys=keys, len=len(keys),
+                            recommendations=recommendations, graph=jsonG)
 
 @app.route('/graph')
 def graph():
-    query = request.args.get('q')
-    return render_template('graph.html',query=query)
+    G = json.loads(request.args.get('G'))
+    vertices = G[0]
+    edges = G[1]
+    return render_template('graph.html', vertices=vertices, edges=edges)
 
 if '__main__' == __name__:
     app.run(debug=True)
