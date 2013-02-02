@@ -44,6 +44,7 @@ def index():
         if wants_recs:
             cliques, G = grapher.analyze(query, tweets, count, top_results)
             recommendations = recommender.find(query, cliques)
+            recommendations = recommendations[:3]
 
     return render_template('index.html', form=form, query=query, tweets=tweets,
                             count=count, keys=keys, len=len(keys),
