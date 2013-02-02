@@ -56,3 +56,5 @@ def graph():
 
 if '__main__' == __name__:
     app.run(debug=True)
+    #app.run(host="192.168.1.8", port=8000, debug=True)
+
