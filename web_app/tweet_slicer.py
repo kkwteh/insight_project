@@ -33,7 +33,7 @@ def init_twitter():
 def slice_up(query):
     twitter_search = init_twitter()
     top_twitter_words = init_data()
-    pages = get_pages_of_tweets(twitter_search, query, num_pages=5)
+    pages = get_pages_of_tweets(twitter_search, query, num_pages=15)
     print "finished download"
     full_tweets = flatten(pages)
     print "flattened pages"
@@ -71,11 +71,10 @@ def clean_tweets(tweets):
 def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 50
+    max_candidates = 150
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
-    top_results = [key for key in keys if count[key] > np.percentile(a,
-                                                            percentile)]
+    top_results = [key for key in keys if count[key] > np.percentile(a, percentile)]
     return top_results
 
 

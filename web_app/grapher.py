@@ -23,13 +23,13 @@ def analyze(query, tweets, count, top_results):
     gt_one_percent = [[key] for key in count if (count[key] >= 0.04*total_words
                                             and key not in all_chained)]
     cliques.extend(gt_one_percent)
-    return cliques, jsony(G)
+    return cliques, jsony(G, count)
 
 
-def jsony(G):
+def jsony(G, count):
     nodes, edges = [], []
     for node in G.nodes():
-        nodes.append({"name": node})
+        nodes.append({"name": "{}: {}".format(node, count[node])})
 
     for edge in G.edges():
         source, target = edge[0], edge[1]
