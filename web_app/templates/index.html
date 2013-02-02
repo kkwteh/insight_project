@@ -24,31 +24,43 @@
 		</div>
 
 		<div class="row">
-			<div class="span4">
-				{% if recommendations != [] %}
-				<h2 class="column_title">
-					Did you mean <strong>{{query}}</strong> as in:
-				</h2>
-				{% for clique_query, tweet in recommendations %}
-					<p>
-						<a class="pretty-link" href="/?q={{clique_query}}&recs=False">This tweet:</a> {{ tweet }}
-					</p>
-			  {% endfor %}
-				<p><strong>
-					<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
-				</strong></p>
-				{% endif %}
-			</div>
-
-			<div class="span4">
+			<div class="span3">
 				{% if tweets != [] %}
 				<h2 class="column_title"> Results for <strong>{{query}}</strong> </h2>
 				{% for tweet in tweets %}
-			    <p class="main_result">{{ tweet }}</p>
+			    <p class="main_result">{{ tweet | safe}}</p>
 			  {% endfor %}
 				{% endif %}
 			</div>
 
+
+				{% if recommendations != [] %}
+			<div class="span9">
+				<h2 class="column_title">
+					Were you looking for tweets like...
+				</h2>
+				<div class = "row">
+					{% for clique_query, tweet in recommendations %}
+						<div class="span3">
+							<div class="category-wrapper">
+								<a class="pretty-link" href="/?q={{clique_query}}&recs=False">
+									This category:
+								</a>
+							</div>
+							<p>
+								 {{ tweet }}
+							</p>
+						</div>
+				  {% endfor %}
+				</div> <!-- /row -->
+				<div class = "row">
+
+				</div>
+			</div>
+				{% endif %}
+		</div> <!-- /row -->
+
+		<div class="row">
 			{% if debug == True %}
 			<div class="span3">
 				<strong> Word count for {{query}} </strong>
@@ -59,13 +71,8 @@
 		  {% endfor %}
 			</div>
 			{% endif %}
-		</div> <!-- /row -->
-	</div> <!-- /container -->
+		</div>
 
-  <div id="footer">
-    <div class="container">
-      <p class="muted credit">Designed and built by Kevin Teh.</p>
-    </div>
-  </div>
+	</div> <!-- /container -->
 
 {% endblock %}
