@@ -32,8 +32,8 @@ def index():
     else:
         wants_recs = True
 
-    (jsonG, count, tweets, keys, cliques, recommendations, G) = (None, {} ,
-                             [],[],[],[],[])
+    (count, tweets, keys, cliques, recommendations, G) = ({} ,
+                             [], [], [], [], None)
 
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
