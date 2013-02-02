@@ -54,6 +54,9 @@
 	font-family: "Helvetica Neue",Arial,sans-serif;
 }
 
+#how_recs{
+	float: right;
+}
 
 /* Wrapper for page content to push down footer */
 #wrap {
