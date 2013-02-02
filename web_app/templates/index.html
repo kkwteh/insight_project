@@ -46,9 +46,9 @@
 						{% for clique_query, tweet in recommendations %}
 							<div class="span3">
 								<div class="category-wrapper">
-									<a class="pretty-link" href="/?q={{clique_query}}&recs=False">
+									<strong> <a class="pretty-link" href="/?q={{clique_query}}&recs=False">
 										This list:
-									</a>
+									</a> </strong>
 								</div>
 								<p>
 									 {{ tweet }}
