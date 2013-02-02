@@ -11,50 +11,58 @@
 		<div class="navbar navbar-inverse navbar-fixed-top">
 		  <div class="navbar-inner">
 		    <a class="brand" href="/">Twitter S.R.E.</a>
+				<form action="/">
+					<input class="search-input" type="text" id="navbar-search" placeholder="Search" name="q" autocomplete="off" spellcheck="false">
+				</form>
 		  </div>
 		</div>
 
-
-		<div class = "hero-unit jumbotron">
-			<h1>See what's happening <strong> right now </strong></h1>
-			<form method="get">
-			    <input type="text" id="q" name="q" autocomplete="off">
-			    <button type="submit" class="btn btn-primary teh">Search</button>
-			</form>
-		</div>
+		{% if tweets == [] %}
+			<div class = "hero-unit jumbotron">
+				<h1>See what's happening <strong> right now </strong></h1>
+				<form method="get">
+				    <input type="text" id="q" name="q" autocomplete="off">
+				    <button type="submit" class="btn btn-primary teh">Search</button>
+				</form>
+			</div>
+		{% endif %}
 
 		<div class="row">
 			<div class="span3">
 				{% if tweets != [] %}
-				<h2 class="column_title"> Results for <strong>{{query}}</strong> </h2>
-				{% for tweet in tweets %}
-			    <p class="main_result">{{ tweet }}</p>
-			  {% endfor %}
-				{% endif %}
-			</div>
-
-
-				{% if recommendations != [] %}
-			<div class="span9">
-				<h2 class="column_title">
-					Were you looking for tweets like...
-				</h2>
-				<div class = "row">
-					{% for clique_query, tweet in recommendations %}
-						<div class="span3">
-							<div class="category-wrapper">
-								<a class="pretty-link" href="/?q={{clique_query}}&recs=False">
-									This category:
-								</a>
-							</div>
-							<p>
-								 {{ tweet }}
-							</p>
-						</div>
+					<h2 class="column_title"> Results for <strong>{{query}}</strong> </h2>
+					{% for tweet in tweets %}
+				    <p class="main_result">{{ tweet | safe}}</p>
 				  {% endfor %}
-				<div> <!-- /row -->
-			</div>
 				{% endif %}
+			</div>
+
+			{% if recommendations != [] %}
+				<div class="span9">
+					<h2 class="column_title">
+						Were you looking for tweets like...
+					</h2>
+					<div class = "row">
+						{% for clique_query, tweet in recommendations %}
+							<div class="span3">
+								<div class="category-wrapper">
+									<a class="pretty-link" href="/?q={{clique_query}}&recs=False">
+										This list:
+									</a>
+								</div>
+								<p>
+									 {{ tweet }}
+								</p>
+							</div>
+					  {% endfor %}
+					</div> <!-- /row -->
+					<div class="row">
+						<p id="how_recs"><strong>
+							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
+						</strong></p>
+					</div> <!-- /row -->
+				</div>
+			{% endif %}
 		</div> <!-- /row -->
 
 		<div class="row">

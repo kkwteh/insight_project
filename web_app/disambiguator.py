@@ -7,8 +7,6 @@ import recommender
 import json
 from flask import Flask, render_template
 from flask.ext.bootstrap import Bootstrap
-from flask.ext.wtf import Form, TextField, HiddenField, ValidationError,\
-                          Required, RecaptchaField
 from flask import request
 
 app = Flask(__name__)
@@ -18,13 +16,9 @@ app.config['BOOTSTRAP_USE_CDN'] = True
 app.config['BOOTSTRAP_FONTAWESOME'] = True
 app.config['SECRET_KEY'] = 'devkey'
 
-class QueryForm(Form):
-    q = TextField(' ',validators=[Required()])
-
 
 @app.route('/')
 def index():
-    form = QueryForm()
     query = request.args.get('q')
 
     if request.args.get('recs') == "False":
@@ -32,8 +26,8 @@ def index():
     else:
         wants_recs = True
 
-    (jsonG, count, tweets, keys, cliques, recommendations, G) = (None, {} ,
-                             [],[],[],[],[])
+    (count, tweets, keys, cliques, recommendations, G) = ({} ,
+                             [], [], [], [], None)
 
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
@@ -46,7 +40,7 @@ def index():
             recommendations = recommender.find(query, cliques)
             recommendations = recommendations[:3]
 
-    return render_template('index.html', form=form, query=query, tweets=tweets,
+    return render_template('index.html', query=query, tweets=tweets,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G)
 
