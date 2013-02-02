@@ -6,20 +6,9 @@
 
 {% block body_content %}
 
+<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+<div class="container">
 
-<style>
-
-.link {
-  stroke: #ccc;
-	stroke-width: 3
-}
-
-.node text {
-  pointer-events: none;
-  font: 14px sans-serif;
-}
-
-</style>
 <body>
 <script type = "text/javascript" src="/static/d3.v3.min.js"></script>
 <script>
@@ -84,9 +73,18 @@ node.attr("transform", function(d) {
 	<div class="container">
 
 		<div class="navbar navbar-inverse navbar-fixed-top">
-		  <div class="navbar-inner">
+
+			<div class="navbar-inner">
 		    <a class="brand" href="/">Twitter S.R.E</a>
+
+				<form action="/">
+					<input class="search-input" type="text" id="navbar-search" placeholder="Search" name="q" autocomplete="off" spellcheck="false">
+				</form>
+
 		  </div>
+
+		  </div>
+
 		</div>
 	</div> <!-- /container -->
 

@@ -11,17 +11,21 @@
 		<div class="navbar navbar-inverse navbar-fixed-top">
 		  <div class="navbar-inner">
 		    <a class="brand" href="/">Twitter S.R.E.</a>
+				<form action="/">
+					<input class="search-input" type="text" id="navbar-search" placeholder="Search" name="q" autocomplete="off" spellcheck="false">
+				</form>
 		  </div>
 		</div>
 
-
-		<div class = "hero-unit jumbotron">
-			<h1>See what's happening <strong> right now </strong></h1>
-			<form method="get">
-			    <input type="text" id="q" name="q" autocomplete="off">
-			    <button type="submit" class="btn btn-primary teh">Search</button>
-			</form>
-		</div>
+		{% if tweets == [] %}
+			<div class = "hero-unit jumbotron">
+				<h1>See what's happening <strong> right now </strong></h1>
+				<form method="get">
+				    <input type="text" id="q" name="q" autocomplete="off">
+				    <button type="submit" class="btn btn-primary teh">Search</button>
+				</form>
+			</div>
+		{% endif %}
 
 		<div class="row">
 			<div class="span3">

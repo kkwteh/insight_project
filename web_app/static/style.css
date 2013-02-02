@@ -58,6 +58,15 @@
 	float: right;
 }
 
+#navbar-search{
+	margin-top: 10px;
+	margin-right: 10px;
+	float: right;
+	background: url(/static/search.png) no-repeat scroll right center;
+	background-color: white;
+}
+
+
 /* Wrapper for page content to push down footer */
 #wrap {
   min-height: 100%;
@@ -83,3 +92,12 @@
   }
 }
 
+.link {
+  stroke: #ccc;
+	stroke-width: 3
+}
+
+.node text {
+  pointer-events: none;
+  font: 14px sans-serif;
+}
