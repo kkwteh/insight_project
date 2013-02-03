@@ -79,7 +79,7 @@ def extract_top_results(query, count, keys):
 
 
 def count_words_in_tweets(query, split_tweets, top_twitter_words):
-    common_many_words = 3000
+    common_many_words = 500
     pairs = top_twitter_words[:common_many_words]
     low_information_words = [x[0] for x in pairs]
     cnt = Counter()
