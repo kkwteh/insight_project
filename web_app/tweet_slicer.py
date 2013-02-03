@@ -108,10 +108,8 @@ def related(word1, word2):
 
 
 def clean_punct(tweet):
-    safe_punct = ["'", "-"]
     for punct in string.punctuation:
-        if punct not in safe_punct:
-            tweet = tweet.replace(punct,"")
+        tweet = tweet.replace(punct,"")
     return tweet
 
 
