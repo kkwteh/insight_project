@@ -15,8 +15,5 @@ def compute_graph(query, top_results, tweets):
                 G.add_edge(w1, w2, weight=1)
                 break
 
-    for node in G.nodes():
-        if G.degree(node) > 7:
-            G.remove_node(node)
     print "end edger"
     return G

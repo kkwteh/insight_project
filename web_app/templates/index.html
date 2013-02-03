@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<title>Kevin Teh - Disambiguate</title>
+<title>Twitter S.R.E.</title>
 
 {% extends "bootstrap_responsive.html" %}
 
@@ -43,16 +43,18 @@
 						Were you looking for tweets like...
 					</h2>
 					<div class = "row">
-						{% for clique_query, tweet in recommendations %}
+						{% for column in recommendations %}
 							<div class="span3">
 								<div class="category-wrapper">
-									<a class="pretty-link" href="/?q={{clique_query}}&recs=False">
+									<strong> <a class="pretty-link" href="/recs=False">
 										This list:
-									</a>
+									</a> </strong>
 								</div>
-								<p>
-									 {{ tweet }}
-								</p>
+								{% for tweet in column %}
+									<p>
+										 {{ tweet }}
+									</p>
+									{% endfor %}
 							</div>
 					  {% endfor %}
 					</div> <!-- /row -->
