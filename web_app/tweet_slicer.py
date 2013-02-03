@@ -1,5 +1,5 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
-
+import sys
 import itertools
 import numpy as np
 import time
@@ -12,6 +12,7 @@ import string
 import sets
 import unicodedata
 import threading
+import urllib2
 from Queue import Queue
 from collections import Counter
 from nltk.tokenize import word_tokenize
@@ -20,7 +21,9 @@ from nltk.corpus import wordnet as wn
 def init_data():
     f = open("top_twitter_words.pkl")
     top_pairs= pickle.load(f)
-    return [pair[0] for pair in top_pairs]
+    top_words = [pair[0] for pair in top_pairs]
+    top_words.extend(["w"])
+    return top_words
 
 
 def init_twitter():
@@ -47,7 +50,6 @@ def slice_up(query):
     print "got tweets"
     split_tweets = clean_tweets(tweets)
     print "cleaned tweets"
-    ##count words is timeconsuming
     count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
     print "counted words"
     top_results = extract_top_results(query, count, keys)
@@ -77,7 +79,7 @@ def clean_tweets(tweets):
 def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 10
+    max_candidates = 30
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
     top_results = [key for key in keys if count[key] > np.percentile(a, percentile)]
@@ -126,7 +128,8 @@ def download_page(twitter_search, query, page_num, per_page):
             page = twitter_search.search(q=query, lang="en", page=page_num,                                             rpp=per_page)['results']
             print "Successfully downloaded page ", page_num
             return page
-    except (twitter.TwitterError):
+    except urllib2.HTTPError, e:
+        print e.code
         print "Failed to get page"
         return None
 
@@ -192,6 +195,7 @@ def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=
         # Create the threads and 'start' them.
         # At this point, they are listening to the
         # queue, waiting to consume
+
         for i in xrange(num_threads):
             thread = TweetDownloader(q, twitter_search)
             thread.setDaemon(True)
