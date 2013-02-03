@@ -19,8 +19,8 @@ from nltk.corpus import wordnet as wn
 
 def init_data():
     f = open("top_twitter_words.pkl")
-    top_twitter_words = pickle.load(f)
-    return top_twitter_words
+    top_pairs= pickle.load(f)
+    return [pair[0] for pair in top_pairs]
 
 
 def init_twitter():
@@ -33,7 +33,13 @@ def init_twitter():
 def slice_up(query):
     twitter_search = init_twitter()
     top_twitter_words = init_data()
-    pages = get_pages_of_tweets(twitter_search, query, num_pages=15)
+
+    num_pages = 15
+    per_page = 100
+    query_list = [query for i in range(num_pages)]
+    page_nums = [i + 1 for i in range(num_pages)]
+    pages_with_queries = get_pages_of_tweets(twitter_search, query_list, page_nums, per_page)
+    pages = [pair[1] for pair in pages_with_queries]
     print "finished download"
     full_tweets = flatten(pages)
     print "flattened pages"
@@ -71,7 +77,7 @@ def clean_tweets(tweets):
 def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 200
+    max_candidates = 10
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
     top_results = [key for key in keys if count[key] > np.percentile(a, percentile)]
@@ -79,26 +85,16 @@ def extract_top_results(query, count, keys):
 
 
 def count_words_in_tweets(query, split_tweets, top_twitter_words):
-    common_many_words = 500
-    pairs = top_twitter_words[:common_many_words]
-    low_information_words = [x[0] for x in pairs]
+    low_information_words = top_twitter_words
     cnt = Counter()
-    high_cnt = Counter()
 
     for split_tweet in split_tweets:
         for word in split_tweet:
-            #store words that are a) not low information words and do not
-            #contain numbers and are not the query itself and
-            #b) wn knows about or begin with a single
-            #capital letter
-            word
+            #store all words not in low_information words
             if (word.lower() not in low_information_words and
                 re.search("[0-9]",word) is None and
                 related(word.lower(),query.lower()) is not True):
-                if wn.synsets(word) != []:
-                    cnt[word.lower()] += 1
-                elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
-                    cnt[word.lower()] += 1
+                cnt[word.lower()] += 1
     keys = [key for key in cnt]
     keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
@@ -112,10 +108,8 @@ def related(word1, word2):
 
 
 def clean_punct(tweet):
-    safe_punct = ["'", "-"]
     for punct in string.punctuation:
-        if punct not in safe_punct:
-            tweet = tweet.replace(punct,"")
+        tweet = tweet.replace(punct,"")
     return tweet
 
 
@@ -125,11 +119,11 @@ def get_ascii(u_string):
 
 
 
-def download_page(twitter_search, query, page_num):
+def download_page(twitter_search, query, page_num, per_page):
     """ Download a page of tweets for the query"""
     try:
         if page_num != None:
-            page = twitter_search.search(q=query, lang="en", page=page_num,                                             rpp=100)['results']
+            page = twitter_search.search(q=query, lang="en", page=page_num,                                             rpp=per_page)['results']
             print "Successfully downloaded page ", page_num
             return page
     except (twitter.TwitterError):
@@ -144,13 +138,12 @@ class TweetDownloader(threading.Thread):
     download their top artists
     """
 
-    def __init__(self, queue, twitter_search, query):
+    def __init__(self, queue, twitter_search):
         threading.Thread.__init__(self)
         self._stop = threading.Event()
         self.pages = []
         self.queue = queue
         self.twitter_search = twitter_search
-        self.query = query
 
     def stop(self):
         self._stop.set()
@@ -169,9 +162,10 @@ class TweetDownloader(threading.Thread):
                 time.sleep(0.1)
                 continue
             try:
-                page_num = self.queue.get()
-                page = download_page(self.twitter_search, self.query, page_num)
-                self.pages.append(page)
+                query, page_num, per_page = self.queue.get()
+                page = download_page(self.twitter_search, query, page_num,
+                                                per_page)
+                self.pages.append((query,page))
                 print "Successfully processed page_num: ", page_num,
                 print " by thread: ", self.ident
                 # No need for a 'queue.task_done' since we're
@@ -180,10 +174,11 @@ class TweetDownloader(threading.Thread):
                 print "Failed to process page_num: ", page_num
                 raise
 
-
-def get_pages_of_tweets(twitter_search, query, num_pages, num_threads=None):
+#query is an array of queries
+#page_nums is an array of page numbers
+def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=None):
     if num_threads is None:
-        num_threads = num_pages
+        num_threads = len(query)
     """ Download 'num_pages' pages from Twitter api.
     These documents are downloaded in parallel using
     separate threads
@@ -198,7 +193,7 @@ def get_pages_of_tweets(twitter_search, query, num_pages, num_threads=None):
         # At this point, they are listening to the
         # queue, waiting to consume
         for i in xrange(num_threads):
-            thread = TweetDownloader(q, twitter_search, query)
+            thread = TweetDownloader(q, twitter_search)
             thread.setDaemon(True)
             thread.start()
             threads.append(thread)
@@ -206,8 +201,8 @@ def get_pages_of_tweets(twitter_search, query, num_pages, num_threads=None):
         # We want to download one array for each page number,
         # so we put every page number in the queue, and
         # these will be processed by the threads
-        for i in xrange(num_pages):
-            q.put(i+1)
+        for i in xrange(len(query)):
+            q.put((query[i], page_nums[i], per_page))
 
         # Wait for all entries in the queue
         # to be processed by our threads

@@ -10,9 +10,9 @@ import networkx as nx
 import sets
 
 def analyze(query, tweets, count, top_results):
-    G = light_edger.compute_graph(query, top_results, tweets)
+    G = heavy_edger.compute_graph(query, top_results, tweets)
     gen = nx.find_cliques(G)
-    sundry = [clique for clique in gen if len(clique) >= 3]
+    sundry = [clique for clique in gen if len(clique) >= 2]
     sundry.sort(key= lambda clique: -len(clique))
 
     nodes_seen = set()
