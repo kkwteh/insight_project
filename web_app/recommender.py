@@ -1,15 +1,17 @@
-import tweet_slicer
 import string
+import itertools
 
-def find(query, cliques):
-    searcher = tweet_slicer.init_twitter()
+def find(tweets, cliques):
     recommendations = []
-    for c in cliques:
-        c.append(query)
-        clique_query = " ".join(c)
-        search_data = searcher.search(q=clique_query, lang="en", rpp=1)
-        print clique_query
-        if search_data[u'results'] != []:
-            tweet = search_data[u'results'][0][u'text']
-            recommendations.append((clique_query, tweet))
+    for clique in cliques:
+        rec_tweets = []
+        for tweet in tweets:
+            norm_tweet = tweet.lower()
+            for w in clique:
+                if norm_tweet.find(w) > -1:
+                    rec_tweets.append(tweet)
+                    tweets.remove(tweet)
+                    break
+        recommendations.append(rec_tweets)
+        print(clique)
     return recommendations

@@ -7,23 +7,27 @@ import sys
 import itertools
 import json
 import networkx as nx
-
+import sets
 
 def analyze(query, tweets, count, top_results):
     G = light_edger.compute_graph(query, top_results, tweets)
-    sundry = [comp for comp in nx.connected_components(G) if len(comp) >= 2]
-    cliques, all_chained = [],[]
+    gen = nx.find_cliques(G)
+    sundry = [clique for clique in gen if len(clique) >= 3]
+    sundry.sort(key= lambda clique: -len(clique))
 
-    for comp in sundry:
-        c = max(comp, key=lambda x: count[x])
-        cliques.append([c])
-        all_chained.extend(comp)
+    nodes_seen = set()
+    for clique in sundry[:]:
+        if len(nodes_seen.intersection(set(clique))) > 0:
+            sundry.remove(clique)
+        else:
+            nodes_seen = nodes_seen.union(clique)
 
     total_words = sum([count[key] for key in count])
-    gt_one_percent = [[key] for key in count if (count[key] >= 0.04*total_words
-                                            and key not in all_chained)]
-    cliques.extend(gt_one_percent)
-    return cliques, jsony(G, count)
+    preface = [[key] for key in count if (count[key] >= 0.04*total_words
+                                            and key not in nodes_seen)]
+    preface.extend(sundry)
+    hot_sets = preface[:3]
+    return hot_sets, jsony(G, count)
 
 
 def jsony(G, count):

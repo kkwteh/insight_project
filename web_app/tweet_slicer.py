@@ -71,7 +71,7 @@ def clean_tweets(tweets):
 def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 150
+    max_candidates = 200
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
     top_results = [key for key in keys if count[key] > np.percentile(a, percentile)]
