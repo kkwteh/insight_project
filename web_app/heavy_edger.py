@@ -15,6 +15,7 @@ def compute_graph(query, top_results, tweets):
         print i
         i += 1
         print len(s[u'results'])
-        if len(s[u'results']) >= 8:
+        if len(s[u'results']) >= 14:
             G.add_edge(w1, w2, weight=1)
     return G
+

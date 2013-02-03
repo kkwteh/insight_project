@@ -19,8 +19,8 @@ from nltk.corpus import wordnet as wn
 
 def init_data():
     f = open("top_twitter_words.pkl")
-    top_twitter_words = pickle.load(f)
-    return top_twitter_words
+    top_pairs= pickle.load(f)
+    return [pair[0] for pair in top_pairs]
 
 
 def init_twitter():
@@ -71,7 +71,7 @@ def clean_tweets(tweets):
 def extract_top_results(query, count, keys):
     just_counts = [count[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 200
+    max_candidates = 10
     percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
     min((1.0 * max_candidates)/len(a),100)
     top_results = [key for key in keys if count[key] > np.percentile(a, percentile)]
@@ -79,26 +79,16 @@ def extract_top_results(query, count, keys):
 
 
 def count_words_in_tweets(query, split_tweets, top_twitter_words):
-    common_many_words = 500
-    pairs = top_twitter_words[:common_many_words]
-    low_information_words = [x[0] for x in pairs]
+    low_information_words = top_twitter_words
     cnt = Counter()
-    high_cnt = Counter()
 
     for split_tweet in split_tweets:
         for word in split_tweet:
-            #store words that are a) not low information words and do not
-            #contain numbers and are not the query itself and
-            #b) wn knows about or begin with a single
-            #capital letter
-            word
+            #store all words not in low_information words
             if (word.lower() not in low_information_words and
                 re.search("[0-9]",word) is None and
                 related(word.lower(),query.lower()) is not True):
-                if wn.synsets(word) != []:
-                    cnt[word.lower()] += 1
-                elif re.search("\A[A-Z][^A-Z]*\Z",word) is not None:
-                    cnt[word.lower()] += 1
+                cnt[word.lower()] += 1
     keys = [key for key in cnt]
     keys.sort(key=lambda k:-cnt[k])
     return cnt, keys
