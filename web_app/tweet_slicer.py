@@ -16,13 +16,13 @@ import urllib2
 from Queue import Queue
 from collections import Counter
 from nltk.tokenize import word_tokenize
+from nltk.tokenize import wordpunct_tokenize
 from nltk.corpus import wordnet as wn
 
 def init_data():
     f = open("top_twitter_words.pkl")
     top_pairs= pickle.load(f)
     top_words = [pair[0] for pair in top_pairs]
-    top_words.extend(["w"])
     return top_words
 
 
@@ -66,13 +66,9 @@ def clean_tweets(tweets):
         tweet = re.sub("@\w*", "", tweet)           #@names
         tweet = re.sub("#\w*", "", tweet)           #hashtags
         tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not periods
-        tweet = clean_punct(tweet)
-        split_tweets.add(tuple(word_tokenize(tweet)))
+        split_tweets.add(tuple(wordpunct_tokenize(tweet)))
 
-    for split_tweet in split_tweets:
-        for word in split_tweet:
-            word = re.sub("\A['-\.]*", "", word)
-            word = re.sub("['-\.]*\Z", "", word)
+
     return list(split_tweets)
 
 
@@ -89,10 +85,8 @@ def extract_top_results(query, count, keys):
 def count_words_in_tweets(query, split_tweets, top_twitter_words):
     low_information_words = top_twitter_words
     cnt = Counter()
-
     for split_tweet in split_tweets:
         for word in split_tweet:
-            #store all words not in low_information words
             if (word.lower() not in low_information_words and
                 re.search("[0-9]",word) is None and
                 related(word.lower(),query.lower()) is not True):
@@ -102,17 +96,11 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
     return cnt, keys
 
 def related(word1, word2):
-        if (re.search(word1, word2) is None and
-             re.search(word2, word1) is None):
+        if (word1.find(word2) == -1 and
+            word2.find(word1) == -1):
             return False
         else:
             return True
-
-
-def clean_punct(tweet):
-    for punct in string.punctuation:
-        tweet = tweet.replace(punct,"")
-    return tweet
 
 
 def get_ascii(u_string):
