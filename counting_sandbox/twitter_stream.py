@@ -1,3 +1,4 @@
+#!/Users/teh/code/insight_project/ENV/bin/python
 import twitter
 import pymongo
 from pymongo import MongoClient

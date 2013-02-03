@@ -42,40 +42,25 @@ def count_words_in_tweets(tweets, stepper):
     for tweet in tweets:
         stepper()
         clean_punct(tweet)
-        tweet = disguise_hash_marks(tweet)   #avoid quirk of word_tokenize
         words_of_tweet = word_tokenize(tweet)
 
         for word in words_of_tweet:
-
-            word = replace_hash_marks(word)
-
             #remove all punctuation from front and back of string
             word = re.sub("\A['-.]*", "", word)
             word = re.sub("['-.]*\Z", "", word)
 
-            #store words that wn knows about or begin with a single capital
-            #letter
-            if (wn.synsets(word.lower()) != []):
-                cnt[word.lower()] += 1
-            elif (wn.synsets(word.lower()) == [] and
-                re.search("\A[A-Z][^A-Z]*\Z",word) is not None):
-                cnt[word.lower()] += 1
+            #store all words
+            cnt[word.lower()] += 1
     return cnt
 
 def get_ascii(u_string):
     return unicodedata.normalize('NFKD', u_string).encode('ascii','ignore')
 
 def clean_punct(tweet):
-    safe_punct = ["'", "-", ".", "#"]
+    safe_punct = ["'", "-", "."]
     for punct in string.punctuation:
         if punct not in safe_punct:
             tweet = tweet.replace(punct,"")
-
-def disguise_hash_marks(tweet):
-    return tweet.replace("#","~")
-
-def replace_hash_marks(word):
-    return word.replace("~","#")
 
 if '__main__' == __name__:
     main()
