@@ -1,10 +1,10 @@
-import tweet_slicer
+import pages_getter
 import networkx as nx
 import twitter
 import itertools
 
 def compute_graph(query, top_results, tweets):
-    searcher = tweet_slicer.init_twitter()
+    searcher = pages_getter.init_twitter()
     G = nx.Graph()
     G.add_nodes_from(top_results)
     pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
@@ -15,7 +15,7 @@ def compute_graph(query, top_results, tweets):
         page_nums.append(1)
 
     per_page = 15
-    pages_with_queries  = tweet_slicer.get_pages_of_tweets(searcher, query_list, page_nums, per_page)
+    pages_with_queries  = pages_getter.get_pages_of_tweets(searcher, query_list, page_nums, per_page)
     for query, page in pages_with_queries:
         w1 = query.split()[1]
         w2 = query.split()[2]
