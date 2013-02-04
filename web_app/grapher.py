@@ -11,17 +11,10 @@ import sets
 
 def analyze(query, tweets, count, top_results):
     G = heavy_edger.compute_graph(query, top_results, tweets)
-    gen = nx.find_cliques(G)
-    sundry = [clique for clique in gen if len(clique) >= 2]
+    comps = nx.connected_components(G)
+    sundry = [comp for comp in comps if len(comp) >= 2]
     sundry.sort(key= lambda clique: -len(clique))
-
-    nodes_seen = set()
-    for clique in sundry[:]:
-        if len(nodes_seen.intersection(set(clique))) > 0:
-            sundry.remove(clique)
-        else:
-            nodes_seen = nodes_seen.union(clique)
-
+    nodes_seen = reduce(lambda x, y : set(x).union(set(y)), sundry)
     total_words = sum([count[key] for key in count])
     preface = [[key] for key in count if (count[key] >= 0.04*total_words
                                             and key not in nodes_seen)]
