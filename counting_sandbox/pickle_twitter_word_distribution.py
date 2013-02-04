@@ -3,6 +3,7 @@ from pymongo import MongoClient
 import string
 from collections import Counter
 from nltk.tokenize import word_tokenize
+from nltk.tokenize import wordpunct_tokenize
 import pickle
 import unicodedata
 import re
@@ -41,26 +42,14 @@ def count_words_in_tweets(tweets, stepper):
 
     for tweet in tweets:
         stepper()
-        clean_punct(tweet)
-        words_of_tweet = word_tokenize(tweet)
+        words_of_tweet = wordpunct_tokenize(tweet)
 
         for word in words_of_tweet:
-            #remove all punctuation from front and back of string
-            word = re.sub("\A['-.]*", "", word)
-            word = re.sub("['-.]*\Z", "", word)
-
-            #store all words
             cnt[word.lower()] += 1
     return cnt
 
 def get_ascii(u_string):
     return unicodedata.normalize('NFKD', u_string).encode('ascii','ignore')
-
-def clean_punct(tweet):
-    safe_punct = ["'", "-", "."]
-    for punct in string.punctuation:
-        if punct not in safe_punct:
-            tweet = tweet.replace(punct,"")
 
 if '__main__' == __name__:
     main()

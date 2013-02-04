@@ -31,10 +31,8 @@ def index():
 
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
-        try:
-            tweets, count, keys, top_results = tweet_slicer.slice_up(query)
-        except:
-            return render_template('index.html')
+        tweets, count, keys, top_results = tweet_slicer.slice_up(query)
+
         if wants_recs:
             cliques, G = grapher.analyze(query, tweets, count, top_results)
             recommendations = recommender.find(tweets, cliques)
@@ -50,6 +48,6 @@ def graph():
     return render_template('graph.html', graph=G)
 
 if '__main__' == __name__:
-    app.run(debug=True)
-    #app.run(host="192.168.1.8", port=8000, debug=True)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
 
