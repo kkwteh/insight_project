@@ -12,6 +12,6 @@ def find(tweets, cliques):
                     rec_tweets.append(tweet)
                     tweets.remove(tweet)
                     break
-        recommendations.append(rec_tweets)
+        recommendations.append(rec_tweets[:3])
         print(clique)
     return recommendations
