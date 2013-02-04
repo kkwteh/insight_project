@@ -50,9 +50,9 @@ def slice_up(query):
     print "got tweets"
     split_tweets = clean_tweets(tweets)
     print "cleaned tweets"
-    count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
+    capital_count, count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
     print "counted words"
-    top_results = extract_top_results(query, count, keys)
+    top_results = extract_top_results(query, capital_count, count, keys)
     print "extracted top results"
     return tweets, count, keys, top_results
 
@@ -72,28 +72,51 @@ def clean_tweets(tweets):
     return list(split_tweets)
 
 
-def extract_top_results(query, count, keys):
-    just_counts = [count[key] for key in keys]
+    # capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
+    # capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
+    # capital_frac.sort(key= lambda (a,b): -cnt[a])
+    # num_candidates = 10
+    # top_results = [a for (a,b) in capital_frac[:num_candidates]]
+    # return top_results
+
+
+def extract_top_results(query, capital_cnt, cnt, keys):
+    capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
+    capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
+    capital_frac.sort(key= lambda (a,b): -cnt[a])
+    just_counts = [cnt[key] for key in keys]
     a = np.array(just_counts)
-    max_candidates = 30
-    percentile = 100 * max(1 - (1.0 * max_candidates)/len(a),0)
-    min((1.0 * max_candidates)/len(a),100)
-    top_results = [key for key in keys if count[key] > np.percentile(a, percentile)]
+    max_capital_candidates = 5
+    max_heavy_candidates = 5
+    heavy_factor = 0.005
+    capital_candidates = [a for (a,b) in capital_frac[:max_capital_candidates]]
+    heavy_candidates = [key for key in cnt if cnt[key] > heavy_factor * sum(just_counts) and key not in capital_candidates]
+    heavy_candidates.sort(key= lambda w: -cnt[w])
+    heavy_candidates = heavy_candidates[:max_heavy_candidates]
+    top_results = heavy_candidates + capital_candidates
+    top_results.sort(key = lambda w: -cnt[w])
     return top_results
 
 
 def count_words_in_tweets(query, split_tweets, top_twitter_words):
     low_information_words = top_twitter_words
     cnt = Counter()
+    capital_cnt = Counter()
     for split_tweet in split_tweets:
         for word in split_tweet:
             if (word.lower() not in low_information_words and
-                re.search("[0-9]",word) is None and
-                related(word.lower(),query.lower()) is not True):
+            re.search("[0-9\W]",word) is None and
+            related(word.lower(),query.lower()) is not True and
+            len(word) > 2):
                 cnt[word.lower()] += 1
+                if len(re.findall("\A[A-Z]", word)) == 1:
+                    capital_cnt[word.lower()] += 1
     keys = [key for key in cnt]
     keys.sort(key=lambda k:-cnt[k])
-    return cnt, keys
+    return capital_cnt, cnt, keys
+
+
+
 
 def related(word1, word2):
         if (word1.find(word2) == -1 and

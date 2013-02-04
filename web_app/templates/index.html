@@ -67,17 +67,18 @@
 			{% endif %}
 		</div> <!-- /row -->
 
-		<div class="row">
-			<div class="span12">
-				<strong> Word count for {{query}} </strong>
-				<br> </br>
-				<strong> Total number of words: {{len}}</strong>
-			{% for key in keys %}
-		    <span class=count>{{ key }} {{ count[key] }} </span>
-		  {% endfor %}
+		{% if tweets != [] %}
+			<div class="row">
+				<div class="span12">
+					<strong> Word count for {{query}} </strong>
+					<br> </br>
+					<strong> Total number of words: {{len}}</strong>
+				{% for key in keys %}
+			    <span class=count>{{ key }} {{ count[key] }} </span>
+			  {% endfor %}
+				</div>
 			</div>
-		</div>
-
+		{% endif %}
 	</div> <!-- /container -->
 
 {% endblock %}

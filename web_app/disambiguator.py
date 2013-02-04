@@ -48,6 +48,6 @@ def graph():
     return render_template('graph.html', graph=G)
 
 if '__main__' == __name__:
-    app.run(debug=True)
-    #app.run(host="192.168.1.8", port=8000, debug=True)
+    #app.run(debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)
 
