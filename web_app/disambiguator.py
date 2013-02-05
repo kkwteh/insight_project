@@ -24,8 +24,9 @@ def index():
     filter = request.args.get('filter')
     if filter is None:
         wants_recs = True
+        filter = ""
     else:
-        filter = filter.split()
+        filter_words = filter.split()
         wants_recs = False
 
     (count, tweets, keys, cliques, recommendations, G) = ({} ,
@@ -39,10 +40,10 @@ def index():
             recommendations = recommender.find(tweets, cliques)
             recommendations = recommendations[:3]
 
-        if filter is not None:
+        if filter != "":
             filtered_tweets = []
             for tweet in tweets:
-                for word in filter:
+                for word in filter_words:
                     if tweet.lower().find(word) >= 0:
                         filtered_tweets.append(tweet)
                         break
@@ -50,7 +51,8 @@ def index():
 
     return render_template('index.html', query=query, tweets=tweets,
                             count=count, keys=keys, len=len(keys),
-                            recommendations=recommendations, graph=G)
+                            recommendations=recommendations, graph=G,
+                            filter=filter)
 
 @app.route('/graph')
 def graph():
