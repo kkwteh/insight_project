@@ -10,8 +10,12 @@
 
 	<script>
 		$(document).ready(function() {
-		  $('h1').highlight('see');
-			$('h1').highlight("what's");
+			{%  for _, clique in recommendations%}
+				var keywords = "{{clique}}".split(" ")
+				for (var i=0; i<keywords.length; i++) {
+					$('#rec_list{{loop.index}}').highlight(keywords[i]);
+				}
+			{% endfor %}
 		});
 	</script>
 
@@ -66,8 +70,8 @@
 					</h2>
 					<div class = "row">
 						{% for column, clique in recommendations %}
-							<div class="span3 recommendation_list" id="{{loop.index}}">
-								<div class="category-wrapper", id="{{loop.index}}">
+							<div class="span3 recommendation_list" id="rec_list{{loop.index}}">
+								<div class="category-wrapper">
 									<strong> <a class="pretty-link"
 															href="/?q={{query}}&filter={{clique}}">
 										This list:
@@ -77,7 +81,7 @@
 									<p>
 										 {{ tweet }}
 									</p>
-									{% endfor %}
+								{% endfor %}
 							</div>
 					  {% endfor %}
 					</div> <!-- /row -->
