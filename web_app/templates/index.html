@@ -1,11 +1,29 @@
 <!DOCTYPE HTML>
+
+<head>
+
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
+	</script>
+
+	<script type="text/javascript" src="/static/jquery.highlight.js">
+	</script>
+
+	<script>
+		$(document).ready(function() {
+		  $('h1').highlight('see');
+			$('h1').highlight("what's");
+		});
+	</script>
+
+	<link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/bootstrap-responsive.min.css"/>
+	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+
 <title>Twitter S.R.E.</title>
 
-{% extends "bootstrap_responsive.html" %}
+</head>
 
-
-{% block body_content %}
-	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
+<body>
 	<div class="container">
 
 		<div class="navbar navbar-inverse navbar-fixed-top">
@@ -48,8 +66,8 @@
 					</h2>
 					<div class = "row">
 						{% for column, clique in recommendations %}
-							<div class="span3">
-								<div class="category-wrapper">
+							<div class="span3 recommendation_list" id="{{loop.index}}">
+								<div class="category-wrapper", id="{{loop.index}}">
 									<strong> <a class="pretty-link"
 															href="/?q={{query}}&filter={{clique}}">
 										This list:
@@ -87,5 +105,4 @@
 			{% endif %}
 		{% endif %}
 	</div> <!-- /container -->
-
-{% endblock %}
+</body>

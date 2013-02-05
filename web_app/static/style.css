@@ -1,3 +1,7 @@
+body {
+	padding: 100px;
+}
+
 .jumbotron {
   text-align: center;
 }
@@ -64,6 +68,10 @@
 	float: right;
 	background: url(/static/search.png) no-repeat scroll right center;
 	background-color: white;
+}
+
+.highlight {
+	background-color: yellow
 }
 
 .link {
