@@ -66,27 +66,25 @@ def clean_tweets(tweets):
     return list(split_tweets)
 
 
-    # capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
-    # capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
-    # capital_frac.sort(key= lambda (a,b): -cnt[a])
-    # num_candidates = 10
-    # top_results = [a for (a,b) in capital_frac[:num_candidates]]
-    # return top_results
-
-
 def extract_top_results(query, capital_cnt, cnt, keys):
     capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
     capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
     capital_frac.sort(key= lambda (a,b): -cnt[a])
     just_counts = [cnt[key] for key in keys]
     a = np.array(just_counts)
-    max_capital_candidates = 5
+
+    total_candidates = 13
     max_heavy_candidates = 5
     heavy_factor = 0.005
-    capital_candidates = [a for (a,b) in capital_frac[:max_capital_candidates]]
-    heavy_candidates = [key for key in cnt if cnt[key] > heavy_factor * sum(just_counts) and key not in capital_candidates]
+
+    heavy_candidates = [key for key in cnt if cnt[key] > heavy_factor * sum(just_counts)]
     heavy_candidates.sort(key= lambda w: -cnt[w])
     heavy_candidates = heavy_candidates[:max_heavy_candidates]
+
+    num_capital_candidates = (total_candidates - len(heavy_candidates))
+    capital_candidates = [a for (a,b) in capital_frac if a not in heavy_candidates]
+    capital_candidates = capital_candidates[:num_capital_candidates]
+
     top_results = heavy_candidates + capital_candidates
     top_results.sort(key = lambda w: -cnt[w])
     return top_results
