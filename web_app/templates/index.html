@@ -30,7 +30,11 @@
 		<div class="row">
 			<div class="span3">
 				{% if tweets != [] %}
-					<h2 class="column_title"> Results for <strong>{{query}}</strong> </h2>
+					<h2 class="column_title"> Results for <strong>{{query}}</strong>
+					{% if filter != "" %}
+						as in {{filter}}
+					{% endif %}
+					</h2>
 					{% for tweet in tweets %}
 				    <p class="main_result">{{ tweet | safe}}</p>
 				  {% endfor %}
@@ -43,10 +47,11 @@
 						Were you looking for tweets like...
 					</h2>
 					<div class = "row">
-						{% for column in recommendations %}
+						{% for column, clique in recommendations %}
 							<div class="span3">
 								<div class="category-wrapper">
-									<strong> <a class="pretty-link" href="/recs=False">
+									<strong> <a class="pretty-link"
+															href="/?q={{query}}&filter={{clique}}">
 										This list:
 									</a> </strong>
 								</div>
@@ -67,17 +72,19 @@
 			{% endif %}
 		</div> <!-- /row -->
 
-		{% if tweets != [] %}
-			<div class="row">
-				<div class="span12">
-					<strong> Word count for {{query}} </strong>
-					<br> </br>
-					<strong> Total number of words: {{len}}</strong>
-				{% for key in keys %}
-			    <span class=count>{{ key }} {{ count[key] }} </span>
-			  {% endfor %}
+		{% if debug == True %}
+			{% if tweets != [] %}
+				<div class="row">
+					<div class="span12">
+						<strong> Word count for {{query}} </strong>
+						<br> </br>
+						<strong> Total number of words: {{len}}</strong>
+					{% for key in keys %}
+				    <span class=count>{{ key }} {{ count[key] }} </span>
+				  {% endfor %}
+					</div>
 				</div>
-			</div>
+			{% endif %}
 		{% endif %}
 	</div> <!-- /container -->
 

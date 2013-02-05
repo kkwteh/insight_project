@@ -89,9 +89,17 @@ def extract_top_results(query, capital_cnt, cnt, keys):
     num_capital_candidates = (total_candidates - len(heavy_candidates))
     capital_candidates = [a for (a,b) in capital_frac if a not in heavy_candidates]
     capital_candidates = capital_candidates[:num_capital_candidates]
-
     top_results = heavy_candidates + capital_candidates
+
+    candidate_pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
+    for w1, w2 in candidate_pairs:
+        if related([w1],[w2]):
+            if cnt[w1] > cnt [w2]:
+                top_results.remove(w2)
+            else:
+                top_results.remove(w1)
     top_results.sort(key = lambda w: -cnt[w])
+
     return top_results
 
 
@@ -112,8 +120,6 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
     keys = [key for key in cnt]
     keys.sort(key=lambda k:-cnt[k])
     return capital_cnt, cnt, keys
-
-
 
 
 def related(word_list1, word_list2):

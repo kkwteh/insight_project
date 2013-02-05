@@ -21,10 +21,13 @@ app.config['SECRET_KEY'] = 'devkey'
 def index():
     query = request.args.get('q')
 
-    if request.args.get('recs') == "False":
-        wants_recs = False
-    else:
+    filter = request.args.get('filter')
+    if filter is None:
         wants_recs = True
+        filter = ""
+    else:
+        filter_words = filter.split()
+        wants_recs = False
 
     (count, tweets, keys, cliques, recommendations, G) = ({} ,
                              [], [], [], [], None)
@@ -37,9 +40,19 @@ def index():
             recommendations = recommender.find(tweets, cliques)
             recommendations = recommendations[:3]
 
+        if filter != "":
+            filtered_tweets = []
+            for tweet in tweets:
+                for word in filter_words:
+                    if tweet.lower().find(word) >= 0:
+                        filtered_tweets.append(tweet)
+                        break
+            tweets = filtered_tweets
+
     return render_template('index.html', query=query, tweets=tweets,
                             count=count, keys=keys, len=len(keys),
-                            recommendations=recommendations, graph=G)
+                            recommendations=recommendations, graph=G,
+                            filter=filter)
 
 @app.route('/graph')
 def graph():
@@ -49,4 +62,3 @@ def graph():
 if '__main__' == __name__:
     #app.run(debug=True)
     app.run(host="0.0.0.0", port=5001, debug=True)
-

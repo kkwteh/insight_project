@@ -13,6 +13,7 @@ def find(tweets, cliques):
                     tweets.remove(tweet)
                     break
         if len(rec_tweets) > 3:
-            recommendations.append(rec_tweets[:3])
+            clique_string = " ".join(clique)
+            recommendations.append([rec_tweets[:3], clique_string])
         print(clique)
     return recommendations
