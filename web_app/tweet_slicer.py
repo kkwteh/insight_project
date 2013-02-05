@@ -42,7 +42,7 @@ def slice_up(query):
     print "flattened pages"
     tweets = [get_ascii(t[u'text']) for t in full_tweets]
     print "got tweets"
-    split_tweets = clean_tweets(tweets)
+    split_tweets = clean_tweets(query, tweets)
     print "cleaned tweets"
     capital_count, count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
     print "counted words"
@@ -53,16 +53,20 @@ def slice_up(query):
 def flatten(pages):
     return list(itertools.chain.from_iterable(pages))
 
-def clean_tweets(tweets):
+def clean_tweets(query, tweets):
     split_tweets = sets.Set()
-    for tweet in tweets:
-        tweet = re.sub("\ART", "", tweet)           #RT indicator
-        tweet = re.sub("@\w*", "", tweet)           #@names
-        tweet = re.sub("#\w*", "", tweet)           #hashtags
-        tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not periods
-        split_tweets.add(tuple(wordpunct_tokenize(tweet)))
+    query_words = query.split()
 
-
+    for tweet in tweets[:]:
+        if related([tweet.lower()], query_words):
+            tweet = re.sub("\ART", "", tweet)           #RT indicator
+            tweet = re.sub("@\w*", "", tweet)           #@names
+            tweet = re.sub("#\w*", "", tweet)           #hashtags
+            tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not
+                                                        #periods
+            split_tweets.add(tuple(wordpunct_tokenize(tweet)))
+        else:
+            tweets.remove(tweet)
     return list(split_tweets)
 
 
@@ -77,7 +81,8 @@ def extract_top_results(query, capital_cnt, cnt, keys):
     max_heavy_candidates = 5
     heavy_factor = 0.005
 
-    heavy_candidates = [key for key in cnt if cnt[key] > heavy_factor * sum(just_counts)]
+    heavy_candidates = [key for key in cnt if (cnt[key] > heavy_factor *
+                                                sum(just_counts))]
     heavy_candidates.sort(key= lambda w: -cnt[w])
     heavy_candidates = heavy_candidates[:max_heavy_candidates]
 
@@ -94,11 +99,12 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
     low_information_words = top_twitter_words
     cnt = Counter()
     capital_cnt = Counter()
+    query_words = query.lower().split()
     for split_tweet in split_tweets:
         for word in split_tweet:
             if (word.lower() not in low_information_words and
             re.search("[0-9\W]",word) is None and
-            related(word.lower(),query.lower()) is not True and
+            related([word.lower()],query_words) is not True and
             len(word) > 2):
                 cnt[word.lower()] += 1
                 if len(re.findall("\A[A-Z]", word)) == 1:
@@ -110,12 +116,13 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
 
 
 
-def related(word1, word2):
-        if (word1.find(word2) == -1 and
-            word2.find(word1) == -1):
-            return False
-        else:
-            return True
+def related(word_list1, word_list2):
+        pairs = itertools.product(word_list1, word_list2)
+        for a, b in pairs:
+            if (a.find(b) != -1 or b.find(a) != -1):
+                 return True
+        print word_list1, word_list2
+        return False
 
 
 def get_ascii(u_string):
