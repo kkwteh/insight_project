@@ -21,8 +21,15 @@ def compute_graph(query, top_results, tweets):
     for query, page in pages_with_queries:
         w1 = query.split()[1]
         w2 = query.split()[2]
-        print len(page)
-        if len(page) >= 14:
+
+        for tweet in page[:]:
+            text = tweet[u'text'].lower()
+            if text.find(w1) == -1 or text.find(w2) == -1:
+                page.remove(tweet)
+        print len(page), w1, w2
+        if len(page) >= 10:
+            for tweet in page:
+                text = tweet[u'text']
             G.add_edge(w1, w2, weight=1)
     return G
 
