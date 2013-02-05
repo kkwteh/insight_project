@@ -57,14 +57,16 @@ def clean_tweets(query, tweets):
     split_tweets = sets.Set()
     query_words = query.split()
 
-    for tweet in tweets:
-
-        tweet = re.sub("\ART", "", tweet)           #RT indicator
-        tweet = re.sub("@\w*", "", tweet)           #@names
-        tweet = re.sub("#\w*", "", tweet)           #hashtags
-        tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not periods
+    for tweet in tweets[:]:
         if related([tweet.lower()], query_words):
+            tweet = re.sub("\ART", "", tweet)           #RT indicator
+            tweet = re.sub("@\w*", "", tweet)           #@names
+            tweet = re.sub("#\w*", "", tweet)           #hashtags
+            tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not
+                                                        #periods
             split_tweets.add(tuple(wordpunct_tokenize(tweet)))
+        else:
+            tweets.remove(tweet)
     return list(split_tweets)
 
 
