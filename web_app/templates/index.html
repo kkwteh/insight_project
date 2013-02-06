@@ -1,26 +1,7 @@
 <!DOCTYPE HTML>
 
 <head>
-
-<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
-	</script>
-
-	<script type="text/javascript" src="/static/jquery.highlight.js">
-	</script>
-
-	<script>
-		$(document).ready(function() {
-			{%  for _, clique in recommendations%}
-				var keywords = "{{clique}}".split(" ")
-				for (var i=0; i<keywords.length; i++) {
-					$('#rec_list{{loop.index}}').highlight(keywords[i]);
-				}
-			{% endfor %}
-		});
-	</script>
-
-
+	<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap-responsive.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
