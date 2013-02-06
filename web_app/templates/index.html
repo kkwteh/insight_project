@@ -52,7 +52,11 @@
 		{% endif %}
 
 		<div class="row">
-			<div class="span3">
+			{% if filter != "" %}
+				<div class="span9">
+			{% else %}
+				<div class="span3">
+			{% endif %}
 				{% if tweet_ids != [] %}
 					<h2 class="column_title"> Results for <strong>{{query}}</strong>
 					{% if filter != "" %}
@@ -68,7 +72,7 @@
 			{% if recommendations != [] %}
 				<div class="span9">
 					<h2 class="column_title">
-						Were you looking for tweets like...
+						Were you looking for {{query}} as in...
 					</h2>
 					<div class = "row">
 						{% for column, clique in recommendations %}
@@ -76,7 +80,7 @@
 								<div class="category-wrapper">
 									<strong> <a class="pretty-link"
 															href="/?q={{query}}&filter={{clique}}">
-										This list:
+															{{clique}}
 									</a> </strong>
 								</div>
 								{% for id in column %}
