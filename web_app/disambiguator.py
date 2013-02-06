@@ -42,7 +42,8 @@ def index():
                         break
             tweets = filtered_tweets
 
-        tweet_ids = [t['id'] for t in tweets][:15]
+        to_display = 30
+        tweet_ids = [t['id'] for t in tweets][:to_display]
     return render_template('index.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G,
