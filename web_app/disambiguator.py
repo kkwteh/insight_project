@@ -30,20 +30,22 @@ def index():
         query = tweet_slicer.get_ascii(query.lower())
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         if wants_recs:
-            cliques, G = grapher.analyze(query, tweets, count, top_results)
-            recommendations = recommender.find(tweets, cliques)
+            tweets_text = [t['text'] for t in tweets]
+            cliques, G = grapher.analyze(query, tweets_text, count, top_results)
+            recommendations = recommender.find(tweets_text, cliques)
             recommendations = recommendations[:3]
 
         if filter != "":
             filtered_tweets = []
             for tweet in tweets:
                 for word in filter_words:
-                    if tweet.lower().find(word) >= 0:
+                    if tweet['text'].lower().find(word) >= 0:
                         filtered_tweets.append(tweet)
                         break
             tweets = filtered_tweets
 
-    return render_template('index.html', query=query, tweets=tweets,
+        tweet_ids = [t['id'] for t in tweets][:15]
+    return render_template('index.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G,
                             filter=filter)

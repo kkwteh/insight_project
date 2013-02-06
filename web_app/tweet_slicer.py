@@ -37,17 +37,12 @@ def slice_up(query):
     page_nums = [i + 1 for i in range(num_pages)]
     pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search, query_list, page_nums, per_page)
     pages = [pair[1] for pair in pages_with_queries]
-    print "finished download"
-    full_tweets = flatten(pages)
-    print "flattened pages"
-    tweets = [get_ascii(t[u'text']) for t in full_tweets]
-    print "got tweets"
+    tweets = flatten(pages)
+    for tweet in tweets:
+        tweet['text'] = get_ascii(tweet[u'text'])
     split_tweets = clean_tweets(query, tweets)
-    print "cleaned tweets"
     capital_count, count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
-    print "counted words"
     top_results = extract_top_results(query, capital_count, count, keys)
-    print "extracted top results"
     return tweets, count, keys, top_results
 
 def flatten(pages):
@@ -58,13 +53,12 @@ def clean_tweets(query, tweets):
     query_words = query.split()
 
     for tweet in tweets[:]:
-        if related([tweet.lower()], query_words):
-            tweet = re.sub("\ART", "", tweet)           #RT indicator
-            tweet = re.sub("@\w*", "", tweet)           #@names
-            tweet = re.sub("#\w*", "", tweet)           #hashtags
-            tweet = re.sub("\S*\.\S+", "", tweet)       #link names, but not
-                                                        #periods
-            split_tweets.add(tuple(wordpunct_tokenize(tweet)))
+        if related([tweet['text'].lower()], query_words):
+            tweet['text'] = re.sub("\ART", "", tweet['text'])
+            tweet['text'] = re.sub("@\w*", "", tweet['text'])
+            tweet['text'] = re.sub("#\w*", "", tweet['text'])
+            tweet['text'] = re.sub("\S*\.\S+", "", tweet['text'])
+            split_tweets.add(tuple(wordpunct_tokenize(tweet['text'])))
         else:
             tweets.remove(tweet)
     return list(split_tweets)
@@ -127,7 +121,6 @@ def related(word_list1, word_list2):
         for a, b in pairs:
             if (a.find(b) != -1 or b.find(a) != -1):
                  return True
-        print word_list1, word_list2
         return False
 
 
