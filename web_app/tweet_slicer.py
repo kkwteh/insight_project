@@ -27,7 +27,7 @@ def init_data():
     return top_words
 
 
-def slice_up(query):
+def slice_up(query, num_results):
     twitter_search = pages_getter.init_twitter()
     top_twitter_words = init_data()
 
@@ -42,7 +42,7 @@ def slice_up(query):
         tweet['text'] = get_ascii(tweet[u'text'])
     split_tweets = clean_tweets(query, tweets)
     capital_count, count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
-    top_results = extract_top_results(query, capital_count, count, keys)
+    top_results = extract_top_results(query, num_results, capital_count, count, keys)
     return tweets, count, keys, top_results
 
 def flatten(pages):
@@ -64,15 +64,15 @@ def clean_tweets(query, tweets):
     return list(split_tweets)
 
 
-def extract_top_results(query, capital_cnt, cnt, keys):
+def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
     capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
     capital_frac.sort(key= lambda (a,b): -cnt[a])
     just_counts = [cnt[key] for key in keys]
     a = np.array(just_counts)
 
-    total_candidates = 13
-    max_heavy_candidates = 5
+    total_candidates = num_results
+    max_heavy_candidates = int(0.4 * total_candidates)
     heavy_factor = 0.005
 
     heavy_candidates = [key for key in cnt if (cnt[key] > heavy_factor *
@@ -86,12 +86,16 @@ def extract_top_results(query, capital_cnt, cnt, keys):
     top_results = heavy_candidates + capital_candidates
 
     candidate_pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
+    print top_results
     for w1, w2 in candidate_pairs:
         if related([w1],[w2]):
+            print w1, w2
             if cnt[w1] > cnt [w2]:
-                top_results.remove(w2)
+                if w2 in top_results:
+                    top_results.remove(w2)
             else:
-                top_results.remove(w1)
+                if w1 in top_results:
+                    top_results.remove(w1)
     top_results.sort(key = lambda w: -cnt[w])
 
     return top_results
