@@ -5,9 +5,11 @@ import clusterer
 import tweet_slicer
 import recommender
 import json
+import sys
 from flask import Flask, render_template
 from flask import request
 
+is_lite = None
 app = Flask(__name__)
 
 
@@ -30,7 +32,7 @@ def index():
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         if wants_recs:
             tweets_text = [t['text'] for t in tweets]
-            cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
+            cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
             recommendations = recommender.find(tweets, cliques)
 
         if filter != "":
@@ -42,7 +44,8 @@ def index():
                         break
             tweets = filtered_tweets
 
-        tweet_ids = [t['id'] for t in tweets][:15]
+        to_display = 30
+        tweet_ids = [t['id'] for t in tweets][:to_display]
     return render_template('index.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G,
@@ -54,5 +57,14 @@ def graph():
     return render_template('graph.html', graph=G)
 
 if '__main__' == __name__:
-    #app.run(debug=True)
+    args = sys.argv[1:]
+
+    if not args:
+        is_lite = False
+    elif args[0] == '--lite':
+        is_lite = True
+    else:
+        print 'usage: [--lite]'
+        sys.exit(1)
+
     app.run(host="0.0.0.0", port=5001, debug=True)

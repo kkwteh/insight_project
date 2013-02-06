@@ -1,6 +1,7 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 import tweet_slicer
 import heavy_grapher
+import light_grapher
 import operator
 import sys
 import itertools
@@ -8,8 +9,12 @@ import json
 import networkx as nx
 import sets
 
-def analyze(query, tweets, count, top_results):
-    G = heavy_grapher.compute_graph(query, top_results, tweets)
+def analyze(is_lite, query, tweets, count, top_results):
+    if is_lite:
+        G = light_grapher.compute_graph(query, top_results, tweets)
+    else:
+        G = heavy_grapher.compute_graph(query, top_results, tweets)
+
     comps = nx.connected_components(G)
     sundry = [comp for comp in comps if len(comp) >= 2]
     sundry.sort(key= lambda clique: -len(clique))

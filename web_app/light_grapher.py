@@ -11,7 +11,8 @@ def compute_graph(query, top_results, tweets):
     for w1, w2 in pairs:
         i += 1
         for tweet in tweets:
-            if tweet.count(w1) > 0 and tweet.count(w2) > 0:
+            text = tweet.lower()
+            if text.count(w1) > 0 and text.count(w2) > 0:
                 G.add_edge(w1, w2, weight=1)
                 break
 

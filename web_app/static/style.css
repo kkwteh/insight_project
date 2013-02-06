@@ -1,9 +1,10 @@
 body {
-	padding: 100px;
+	padding: 60px;
 }
 
 .jumbotron {
   text-align: center;
+  margin:40px;
 }
 .jumbotron h1 {
   font-family: "Helvetica Neue",Arial,sans-serif;
@@ -34,13 +35,6 @@ body {
 	border-radius: 3px;
 }
 
-.main_result {
-	font-family: "Helvetica Neue",Arial,sans-serif;
-	font-size: 14px;
-	line-height: 18px;
-	color: #333;
-}
-
 .column_title {
 	padding-bottom: 2px;
 	white-space: nowrap;
@@ -60,6 +54,16 @@ body {
 
 #how_recs{
 	float: right;
+}
+
+.right-side{
+	position:fixed;
+	top:60px;
+}
+
+.recommendations{
+	height:400px;
+	overflow:auto;
 }
 
 #navbar-search{
