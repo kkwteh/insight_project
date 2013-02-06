@@ -52,29 +52,46 @@
 
 			{% if recommendations != [] %}
 				<div class="span9">
-					<h2 class="column_title">
-						Were you looking for <strong>{{query}}</strong> as in...
-					</h2>
-					<div class = "row">
-						{% for column, clique in recommendations %}
-							<div class="span3 recommendation_list" id="rec_list{{loop.index}}">
-								<div class="category-wrapper">
-									<strong> <a class="pretty-link"
-															href="/?q={{query}}&filter={{clique}}">
-															{{clique}}
-									</a> </strong>
+					<div class="right-side">
+
+						<div class = "row">
+							<h4>
+								Were you looking for <strong>{{query}}</strong> as in...
+							</h4>
+						</div>
+
+						<div class="row">
+							{% for column, clique in recommendations %}
+								<div class="span3">
+									<div class="category-wrapper">
+										<strong> <a class="pretty-link"
+																href="/?q={{query}}&filter={{clique}}">
+																{{clique}}
+										</a> </strong>
+									</div>
 								</div>
-								{% for id in column %}
-									<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
-								{% endfor %}
-							</div>
-					  {% endfor %}
-					</div> <!-- /row -->
-					<div class="row">
-						<p id="how_recs"><strong>
-							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
-						</strong></p>
-					</div> <!-- /row -->
+							{% endfor %}
+						</div>
+
+						<div class="row recommendations">
+							<div class = "row">
+								{% for column, clique in recommendations %}
+									<div class="span3 recommendation_list">
+										{% for id in column %}
+											<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
+										{% endfor %}
+									</div>
+							  {% endfor %}
+							</div> <!-- /row -->
+						</div> <!-- /row -->
+
+						<div class="row">
+							<p id="how_recs"><strong>
+								<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
+							</strong></p>
+						</div> <!-- /row -->
+
+					</div>
 				</div>
 			{% endif %}
 		</div> <!-- /row -->

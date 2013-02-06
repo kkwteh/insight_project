@@ -1,5 +1,5 @@
 body {
-	padding: 100px;
+	padding: 50px;
 }
 
 .jumbotron {
@@ -60,6 +60,18 @@ body {
 
 #how_recs{
 	float: right;
+}
+
+.right-side{
+	position:fixed;
+	top:50px;
+}
+
+.recommendations{
+	height:400px;
+	border:1px solid;
+	border-color:#C0C0C0;
+	overflow:auto;
 }
 
 #navbar-search{
