@@ -7,7 +7,7 @@ def compute_graph(query, top_results, tweets):
     G.add_nodes_from(top_results)
     pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
 
-    edge_threshold = 10
+    edge_threshold = 5
     for w1, w2 in pairs:
         pair_count = 0
         for tweet in tweets:
