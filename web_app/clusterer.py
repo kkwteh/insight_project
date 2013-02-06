@@ -1,7 +1,6 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 import tweet_slicer
-import heavy_edger
-import light_edger
+import heavy_grapher
 import operator
 import sys
 import itertools
@@ -10,7 +9,7 @@ import networkx as nx
 import sets
 
 def analyze(query, tweets, count, top_results):
-    G = heavy_edger.compute_graph(query, top_results, tweets)
+    G = heavy_grapher.compute_graph(query, top_results, tweets)
     comps = nx.connected_components(G)
     sundry = [comp for comp in comps if len(comp) >= 2]
     sundry.sort(key= lambda clique: -len(clique))
