@@ -1,7 +1,7 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 # coding=utf8
 
-import grapher
+import clusterer
 import tweet_slicer
 import recommender
 import json
@@ -30,7 +30,7 @@ def index():
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         if wants_recs:
             tweets_text = [t['text'] for t in tweets]
-            cliques, G = grapher.analyze(query, tweets_text, count, top_results)
+            cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
             recommendations = recommender.find(tweets, cliques)
 
         if filter != "":
