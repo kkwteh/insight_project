@@ -63,8 +63,6 @@ body {
 
 .recommendations{
 	height:400px;
-	border:1px solid;
-	border-color:#C0C0C0;
 	overflow:auto;
 }
 
