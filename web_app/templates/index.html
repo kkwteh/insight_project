@@ -41,7 +41,7 @@
 		  </div>
 		</div>
 
-		{% if tweets == [] %}
+		{% if tweet_ids == [] %}
 			<div class = "hero-unit jumbotron">
 				<h1>See what's happening <strong> right now </strong></h1>
 				<form method="get">
@@ -53,7 +53,7 @@
 
 		<div class="row">
 			<div class="span3">
-				{% if tweets != [] %}
+				{% if tweet_ids != [] %}
 					<h2 class="column_title"> Results for <strong>{{query}}</strong>
 					{% if filter != "" %}
 						as in {{filter}}
@@ -79,10 +79,8 @@
 										This list:
 									</a> </strong>
 								</div>
-								{% for tweet in column %}
-									<p>
-										 {{ tweet }}
-									</p>
+								{% for id in column %}
+									<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 								{% endfor %}
 							</div>
 					  {% endfor %}
@@ -97,7 +95,7 @@
 		</div> <!-- /row -->
 
 		{% if debug == True %}
-			{% if tweets != [] %}
+			{% if tweet_ids != [] %}
 				<div class="row">
 					<div class="span12">
 						<strong> Word count for {{query}} </strong>
