@@ -1,24 +1,7 @@
 <!DOCTYPE HTML>
 
 <head>
-
-	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js">
-	</script>
-
-	<script type="text/javascript" src="/static/jquery.highlight.js">
-	</script>
-
-	<script>
-		$(document).ready(function() {
-			{%  for _, clique in recommendations%}
-				var keywords = "{{clique}}".split(" ")
-				for (var i=0; i<keywords.length; i++) {
-					$('#rec_list{{loop.index}}').highlight(keywords[i]);
-				}
-			{% endfor %}
-		});
-	</script>
-
+	<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap-responsive.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
@@ -39,7 +22,7 @@
 		  </div>
 		</div>
 
-		{% if tweets == [] %}
+		{% if tweet_ids == [] %}
 			<div class = "hero-unit jumbotron">
 				<h1>See what's happening <strong> right now </strong></h1>
 				<form method="get">
@@ -50,15 +33,19 @@
 		{% endif %}
 
 		<div class="row">
-			<div class="span3">
-				{% if tweets != [] %}
+			{% if filter != "" %}
+				<div class="span9">
+			{% else %}
+				<div class="span3">
+			{% endif %}
+				{% if tweet_ids != [] %}
 					<h2 class="column_title"> Results for <strong>{{query}}</strong>
 					{% if filter != "" %}
 						as in {{filter}}
 					{% endif %}
 					</h2>
-					{% for tweet in tweets %}
-				    <p class="main_result">{{ tweet | safe}}</p>
+					{% for id in tweet_ids %}
+						<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 				  {% endfor %}
 				{% endif %}
 			</div>
@@ -66,7 +53,7 @@
 			{% if recommendations != [] %}
 				<div class="span9">
 					<h2 class="column_title">
-						Were you looking for tweets like...
+						Were you looking for {{query}} as in...
 					</h2>
 					<div class = "row">
 						{% for column, clique in recommendations %}
@@ -74,13 +61,11 @@
 								<div class="category-wrapper">
 									<strong> <a class="pretty-link"
 															href="/?q={{query}}&filter={{clique}}">
-										This list:
+															{{clique}}
 									</a> </strong>
 								</div>
-								{% for tweet in column %}
-									<p>
-										 {{ tweet }}
-									</p>
+								{% for id in column %}
+									<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 								{% endfor %}
 							</div>
 					  {% endfor %}
@@ -95,7 +80,7 @@
 		</div> <!-- /row -->
 
 		{% if debug == True %}
-			{% if tweets != [] %}
+			{% if tweet_ids != [] %}
 				<div class="row">
 					<div class="span12">
 						<strong> Word count for {{query}} </strong>

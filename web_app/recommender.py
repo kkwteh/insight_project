@@ -6,11 +6,10 @@ def find(tweets, cliques):
     for clique in cliques:
         rec_tweets = []
         for tweet in tweets:
-            norm_tweet = tweet.lower()
+            norm_tweet = tweet['text'].lower()
             for w in clique:
                 if norm_tweet.find(w) > -1:
-                    rec_tweets.append(tweet)
-                    tweets.remove(tweet)
+                    rec_tweets.append(tweet['id'])
                     break
         if len(rec_tweets) > 3:
             clique_string = " ".join(clique)

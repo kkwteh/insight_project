@@ -14,7 +14,6 @@ app = Flask(__name__)
 @app.route('/')
 def index():
     query = request.args.get('q')
-
     filter = request.args.get('filter')
     if filter is None:
         wants_recs = True
@@ -23,27 +22,28 @@ def index():
         filter_words = filter.split()
         wants_recs = False
 
-    (count, tweets, keys, cliques, recommendations, G) = ({} ,
+    (count, tweet_ids, tweets, keys, cliques, recommendations, G) = ({} ,[],
                              [], [], [], [], None)
 
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         if wants_recs:
-            cliques, G = grapher.analyze(query, tweets, count, top_results)
+            tweets_text = [t['text'] for t in tweets]
+            cliques, G = grapher.analyze(query, tweets_text, count, top_results)
             recommendations = recommender.find(tweets, cliques)
-            recommendations = recommendations[:3]
 
         if filter != "":
             filtered_tweets = []
             for tweet in tweets:
                 for word in filter_words:
-                    if tweet.lower().find(word) >= 0:
+                    if tweet['text'].lower().find(word) >= 0:
                         filtered_tweets.append(tweet)
                         break
             tweets = filtered_tweets
 
-    return render_template('index.html', query=query, tweets=tweets,
+        tweet_ids = [t['id'] for t in tweets][:15]
+    return render_template('index.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G,
                             filter=filter)
