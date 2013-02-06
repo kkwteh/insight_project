@@ -9,12 +9,7 @@ import json
 import networkx as nx
 import sets
 
-def analyze(is_lite, query, tweets, count, top_results):
-    if is_lite:
-        G = light_grapher.compute_graph(query, top_results, tweets)
-    else:
-        G = heavy_grapher.compute_graph(query, top_results, tweets)
-
+def heavy_clusters(G, count, top_results):
     comps = nx.connected_components(G)
     sundry = [comp for comp in comps if len(comp) >= 2]
     sundry.sort(key= lambda clique: -len(clique))
@@ -26,7 +21,8 @@ def analyze(is_lite, query, tweets, count, top_results):
         nodes_seen = set()
 
     total_words = sum([count[key] for key in count])
-    preface = [[key] for key in count if (count[key] >= 0.04*total_words
+    super_heavy = 0.04
+    preface = [[key] for key in count if (count[key] >= super_heavy*total_words
                                             and key not in nodes_seen)]
     preface.extend(sundry)
 
@@ -34,13 +30,32 @@ def analyze(is_lite, query, tweets, count, top_results):
     for group in preface:
         for word in group:
             chosen_ones.append(word)
+
+    kinda_heavy = 0.01
     left_overs = [[word] for word in top_results if (word not in chosen_ones
-                                          and count[word] >= 0.01*total_words)]
+                                    and count[word] >= kinda_heavy*total_words)]
     left_overs.sort(key= lambda x : -count[x[0]])
     filler_length = 3 - len(preface)
     preface.extend(left_overs[:filler_length])
 
     hot_sets = preface[:3]
+    return hot_sets
+
+def lite_clusters(G, count, top_results):
+    cliques = nx.find_cliques(G)
+
+
+def analyze(is_lite, query, tweets, count, top_results):
+    if is_lite:
+        G = light_grapher.compute_graph(query, top_results, tweets)
+    else:
+        G = heavy_grapher.compute_graph(query, top_results, tweets)
+
+    if is_lite:
+        hot_sets = lite_clusters(G, count, top_results)
+    else:
+        hot_sets = heavy_clusters(G, count, top_results)
+
     return hot_sets, jsony(G, count)
 
 

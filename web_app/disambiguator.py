@@ -29,7 +29,12 @@ def index():
 
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
-        tweets, count, keys, top_results = tweet_slicer.slice_up(query)
+        if is_lite:
+            num_results = 30
+        else:
+            num_results = 13
+        tweets, count, keys, top_results = tweet_slicer.slice_up(query,
+                                                            num_results)
         if wants_recs:
             tweets_text = [t['text'] for t in tweets]
             cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
