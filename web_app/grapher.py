@@ -30,7 +30,8 @@ def analyze(query, tweets, count, top_results):
     for group in preface:
         for word in group:
             chosen_ones.append(word)
-    left_overs = [[word] for word in top_results if word not in chosen_ones]
+    left_overs = [[word] for word in top_results if (word not in chosen_ones
+                                          and count[word] >= 0.01*total_words)]
     left_overs.sort(key= lambda x : -count[x[0]])
     filler_length = 3 - len(preface)
     preface.extend(left_overs[:filler_length])
