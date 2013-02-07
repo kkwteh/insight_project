@@ -56,14 +56,26 @@ body {
 	float: right;
 }
 
+.results_title{
+	font-size: 2em;
+}
+
 .right-side{
 	position:fixed;
-	top:60px;
+	bottom:0px;
+	background-color: #fff;
+	margin-top:40px;
+	margin-left:0px;
 }
 
 .recommendations{
-	height:400px;
+	height:200px;
 	overflow:auto;
+}
+
+.clique{
+	font-size: 1.5em;
+
 }
 
 #navbar-search{

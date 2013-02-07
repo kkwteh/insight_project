@@ -33,27 +33,24 @@
 		{% endif %}
 
 		<div class="row">
-			{% if filter != "" %}
-				<div class="span9">
-			{% else %}
-				<div class="span3">
-			{% endif %}
+			<div class="span6 offset3">
 				{% if tweet_ids != [] %}
-					<h2 class="column_title"> Results for <strong>{{query}}</strong>
+					<h1 class="results_title"> Results for <strong>{{query}}</strong>
 					{% if filter != "" %}
 						as in {{filter}}
 					{% endif %}
-					</h2>
+					</h1>
 					{% for id in tweet_ids %}
 						<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 				  {% endfor %}
 				{% endif %}
 			</div>
+		</div> <!-- /row -->
 
-			{% if recommendations != [] %}
-				<div class="span9">
-					<div class="right-side">
-
+		{% if recommendations != [] %}
+			<div class="right-side">
+				<div class="row">
+					<div class="span12">
 						<div class = "row">
 							<h4>
 								Were you looking for <strong>{{query}}</strong> as in...
@@ -62,9 +59,9 @@
 
 						<div class="row">
 							{% for column, clique in recommendations %}
-								<div class="span3">
+								<div class="span4">
 									<div class="category-wrapper">
-										<strong> <a class="pretty-link"
+										<strong> <a class="pretty-link clique"
 																href="/?q={{query}}&filter={{clique}}">
 																{{clique}}
 										</a> </strong>
@@ -76,7 +73,7 @@
 						<div class="row recommendations">
 							<div class = "row">
 								{% for column, clique in recommendations %}
-									<div class="span3 recommendation_list">
+									<div class="span4 recommendation_list">
 										{% for id in column %}
 											<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 										{% endfor %}
@@ -93,8 +90,9 @@
 
 					</div>
 				</div>
-			{% endif %}
-		</div> <!-- /row -->
+			</div> <!-- /row -->
+		{% endif %}
+
 
 		{% if debug == True %}
 			{% if tweet_ids != [] %}
