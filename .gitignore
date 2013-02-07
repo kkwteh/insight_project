@@ -1,5 +1,8 @@
 /ENV
 
+#key_pairs
+.pem
+
 *.py[cod]
 foo.py
 
