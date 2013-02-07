@@ -102,6 +102,7 @@ def extract_top_results(query, num_results, capital_cnt, cnt, keys):
 
 
 def count_words_in_tweets(query, split_tweets, top_twitter_words):
+    top_twitter_words.append('fi')
     low_information_words = top_twitter_words
     cnt = Counter()
     capital_cnt = Counter()

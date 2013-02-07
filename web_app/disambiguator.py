@@ -32,7 +32,7 @@ def index():
         if is_lite:
             num_results = 30
         else:
-            num_results = 13
+            num_results = 15
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                             num_results)
         if wants_recs:
