@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap-responsive.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 
-	<title>Twitter S.R.E.</title>
+	<title>cluster-pluck</title>
 
 </head>
 
@@ -17,19 +17,26 @@
 
 		<div class="navbar navbar-inverse navbar-fixed-top">
 		  <div class="navbar-inner">
-		    <a class="brand" href="/">Twitter S.R.E.</a>
-				<form action="/">
-					<input class="search-input" type="text" id="navbar-search" placeholder="Search" name="q" autocomplete="off" spellcheck="false">
+		    <a class="brand" href="/">cluster-pluck by kevin teh</a>
+
+				<form class="navbar-search pull-right" action="/">
+				  <input type="text" class="search-query" name="q" placeholder="Search" spellcheck="false">
 				</form>
+				<ul class="nav pull-left">
+				  <li><a target="_blank"  href="http://www.slideshare.net/tehkevin1/kevin-teh-insight-presentation">About</a></li>
+				</ul>
 		  </div>
 		</div>
+
+
 
 		{% if tweet_ids == [] %}
 			<div class = "hero-unit jumbotron">
 				<h1>See what's happening <strong> right now </strong></h1>
-				<form method="get">
-				    <input type="text" id="q" name="q" autocomplete="off">
-				    <button type="submit" class="btn btn-primary teh">Search</button>
+
+				<form method="get" class="form-search">
+				  <input type="text" class="input-xxlarge" name="q" autocomplete="off">
+				  <button type="submit" class="btn btn-primary">Search</button>
 				</form>
 			</div>
 		{% endif %}
