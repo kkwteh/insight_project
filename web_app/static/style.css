@@ -22,19 +22,6 @@ body {
 }
 
 
-.jumbotron input {
-	display: inline-block;
-	margin: 0;
-	outline: 0;
-	width: 620px;
-	padding: 7px 9px;
-	background-color: #fff;
-	border: 1px solid #ccc;
-	font-size: 13px;
-	line-height: 20px;
-	border-radius: 3px;
-}
-
 #how_recs{
 	float: right;
 }
@@ -64,12 +51,9 @@ body {
 	font-size: 1.5em;
 }
 
-#navbar-search{
-	margin-top: 10px;
+.navbar-form{
 	margin-right: 10px;
-	float: right;
 	background: url(/static/search.png) no-repeat scroll right center;
-	background-color: white;
 }
 
 .link {
