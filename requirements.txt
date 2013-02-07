@@ -1,14 +1,10 @@
 Flask==0.9
-Flask-Bootstrap==2.2.2-1
-Flask-WTF==0.8.2
 Jinja2==2.6
 MySQL-python==1.2.4
 PyYAML==3.10
 WTForms==1.0.3
 Werkzeug==0.8.3
 distribute==0.6.31
-inflect==0.2.3
-matplotlib==1.2.0
 networkx==1.7
 nltk==2.0.4
 numpy==1.6.2
