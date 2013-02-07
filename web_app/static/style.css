@@ -60,7 +60,7 @@ body {
 	font-size: 2em;
 }
 
-.right-side{
+.lower_page{
 	position:fixed;
 	bottom:0px;
 	background-color: #fff;
@@ -73,9 +73,12 @@ body {
 	overflow:auto;
 }
 
+.toggler{
+	padding-bottom:5px;
+}
+
 .clique{
 	font-size: 1.5em;
-
 }
 
 #navbar-search{

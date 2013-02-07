@@ -1,12 +1,14 @@
 <!DOCTYPE HTML>
 
 <head>
+	<script type="text/javascript" src="/static/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="/static/index.js"></script>
 	<script src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/bootstrap-responsive.min.css"/>
 	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
 
-<title>Twitter S.R.E.</title>
+	<title>Twitter S.R.E.</title>
 
 </head>
 
@@ -48,46 +50,48 @@
 		</div> <!-- /row -->
 
 		{% if recommendations != [] %}
-			<div class="right-side">
+			<div class="lower_page">
 				<div class="row">
 					<div class="span12">
-						<div class = "row">
-							<h4>
-								Were you looking for <strong>{{query}}</strong> as in...
-							</h4>
-						</div>
 
-						<div class="row">
-							{% for column, clique in recommendations %}
-								<div class="span4">
-									<div class="category-wrapper">
-										<strong> <a class="pretty-link clique"
-																href="/?q={{query}}&filter={{clique}}">
-																{{clique}}
-										</a> </strong>
-									</div>
-								</div>
-							{% endfor %}
-						</div>
-
-						<div class="row recommendations">
+						<div class="hide_seek">
 							<div class = "row">
+								<h4 class="recs_title">
+									Were you looking for <strong>{{query}}</strong> as in...
+								</h4>
+							</div>
+
+							<div class="row">
 								{% for column, clique in recommendations %}
-									<div class="span4 recommendation_list">
-										{% for id in column %}
-											<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
-										{% endfor %}
+									<div class="span4">
+										<div class="category-wrapper">
+											<strong> <a class="pretty-link clique"
+																	href="/?q={{query}}&filter={{clique}}">
+																	{{clique}}
+											</a> </strong>
+										</div>
 									</div>
-							  {% endfor %}
+								{% endfor %}
+							</div>
+
+							<div class="row recommendations">
+								<div class = "row">
+									{% for column, clique in recommendations %}
+										<div class="span4 recommendation_list">
+											{% for id in column %}
+												<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
+											{% endfor %}
+										</div>
+								  {% endfor %}
+								</div> <!-- /row -->
 							</div> <!-- /row -->
-						</div> <!-- /row -->
-
-						<div class="row">
-							<p id="how_recs"><strong>
-								<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
-							</strong></p>
-						</div> <!-- /row -->
-
+							<div class="row">
+								<span id="how_recs"><strong>
+									<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
+								</strong></span>
+							</div> <!-- /row -->
+						</div>
+						<span class="toggler"> Hide Recommendations </span>
 					</div>
 				</div>
 			</div> <!-- /row -->
