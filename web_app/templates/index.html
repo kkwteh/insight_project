@@ -72,7 +72,7 @@
 
 							<div class="row">
 								{% for column, clique in recommendations %}
-									<div class="span4">
+									<div class="span3 offset1">
 										<div class="category-wrapper">
 											<strong> <a class="pretty-link clique"
 																	href="/?q={{query}}&filter={{clique}}">
@@ -86,7 +86,7 @@
 							<div class="row recommendations">
 								<div class = "row">
 									{% for column, clique in recommendations %}
-										<div class="span4 recommendation_list">
+										<div class="span3 offset1 recommendation_list">
 											{% for id in column %}
 												<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 											{% endfor %}
