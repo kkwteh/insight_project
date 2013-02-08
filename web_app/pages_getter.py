@@ -6,13 +6,17 @@ import threading
 import urllib2
 import sets
 import random
+import cred
 from Queue import Queue
 
 
 def init_twitter():
-    cred = ('101769689-tPwXbgj96kaYpnCKHSijZJ5r6arePyLlMIQUj4Ts', 'ijCLoaw3bfRiOzbR572jKGQe3pYHndIps3CIp9KOWa4', 'sLGccwOdfySptswo1ZKErg', 'z5V9g6sOJ9BEYhvsSvnzt6pjS7gVWV2komWyIz5XZE')
+    OAuth_creds = cred.twitter_OAuth
     return twitter.Twitter(domain="search.twitter.com",
-                    auth=twitter.oauth.OAuth(cred[0],cred[1],cred[2],cred[3]))
+                    auth=twitter.oauth.OAuth(OAuth_creds[0],
+                    OAuth_creds[1],
+                    OAuth_creds[2],
+                    OAuth_creds[3]))
 
 
 def download_page(twitter_search, query, page_num, per_page, was_seen=None):
