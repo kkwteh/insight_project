@@ -1,10 +1,8 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 import sys
 import itertools
-import numpy as np
 import time
 import twitter
-import inflect
 import pickle
 import re
 import os
@@ -20,16 +18,16 @@ from nltk.tokenize import word_tokenize
 from nltk.tokenize import wordpunct_tokenize
 from nltk.corpus import wordnet as wn
 
-def init_data():
-    f = open("top_twitter_words.pkl")
+def init_data(file_path):
+    f = open(file_path)
     top_pairs= pickle.load(f)
     top_words = [pair[0] for pair in top_pairs]
     return top_words
 
 
-def slice_up(query, num_results):
+def slice_up(query, num_results, file_path):
     twitter_search = pages_getter.init_twitter()
-    top_twitter_words = init_data()
+    top_twitter_words = init_data(file_path)
 
     num_pages = 15
     per_page = 100
@@ -69,7 +67,6 @@ def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
     capital_frac.sort(key= lambda (a,b): -cnt[a])
     just_counts = [cnt[key] for key in keys]
-    a = np.array(just_counts)
 
     total_candidates = num_results
     max_heavy_candidates = int(0.4 * total_candidates)
