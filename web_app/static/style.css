@@ -30,20 +30,7 @@ body {
 	font-size: 2em;
 }
 
-.lower_page{
-	position:fixed;
-	bottom:0px;
-	background-color: #fff;
-	margin-top:40px;
-	margin-left:0px;
-}
-
-.recommendations{
-	height:200px;
-	overflow:auto;
-}
-
-.toggler{
+.all_tweets{
 	float:right;
 }
 
