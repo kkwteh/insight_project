@@ -65,3 +65,7 @@ body {
   pointer-events: none;
   font: 14px sans-serif;
 }
+
+.debug{
+	display: none;
+}
