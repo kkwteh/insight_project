@@ -73,4 +73,6 @@ if '__main__' == __name__:
         print 'usage: [--lite]'
         sys.exit(1)
 
-    app.run(host="0.0.0.0", port=5001, debug=True)
+    # app.run(host="0.0.0.0", port=5001, debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host="0.0.0.0", port=port)
