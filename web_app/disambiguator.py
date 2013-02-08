@@ -34,9 +34,8 @@ def index():
             num_results = 30
         else:
             num_results = 15
-        words_path = app.root_path + "/top_twitter_words.pkl"
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
-                                                    num_results, words_path)
+                                                    num_results)
         if wants_recs:
             tweets_text = [t['text'] for t in tweets]
             cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
