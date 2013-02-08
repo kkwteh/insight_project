@@ -28,8 +28,6 @@
 		  </div>
 		</div>
 
-
-
 		{% if tweet_ids == [] %}
 			<div class = "hero-unit jumbotron">
 				<h1>See what's happening <strong> right now </strong></h1>
@@ -39,6 +37,23 @@
 				  <button type="submit" class="btn btn-primary">Search</button>
 				</form>
 			</div>
+		{% endif %}
+
+		{% if filter != "" %}
+			<div class="row">
+				<div class="span6 offset3">
+					{% if tweet_ids != [] %}
+						<h1 class="results_title"> Results for <strong>{{query}}</strong>
+						{% if filter != "" %}
+							as in {{filter}}
+						{% endif %}
+						</h1>
+						{% for id in tweet_ids %}
+							<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
+					  {% endfor %}
+					{% endif %}
+				</div>
+			</div> <!-- /row -->
 		{% endif %}
 
 		{% if recommendations != [] %}
