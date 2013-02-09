@@ -17,19 +17,10 @@ app = Flask(__name__)
 @app.route('/search')
 def search():
     query = request.args.get('q')
-    filter = request.args.get('filter')
-    if filter is None:
-        mode = "recs"
-        filter = ""
-    elif filter == "'":
-        mode = "all"
-    else:
-        filter_words = filter.split()
-        mode = "filter"
-
     (count, tweet_ids, tweets, keys, cliques, recommendations, G) = ({} ,[],
                              [], [], [], [], None)
-
+    if query is None:
+        return render_template('index.html')
     if query is not None:
         query = tweet_slicer.get_ascii(query.lower())
         if is_lite:
@@ -38,34 +29,35 @@ def search():
             num_results = 15
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                     num_results)
-        if mode == "recs":
-            tweets_text = [t['text'] for t in tweets]
-            cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
-            recommendations = recommender.find(tweets, cliques)
+        tweets_text = [t['text'] for t in tweets]
+        cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
+        recommendations = recommender.find(tweets, cliques)
 
-        if mode == "filter":
-            filtered_tweets = []
-            for tweet in tweets:
-                for word in filter_words:
-                    if tweet['text'].lower().find(word) >= 0:
-                        filtered_tweets.append(tweet)
-                        break
-            tweets = filtered_tweets
-        elif mode == "all":
-            pass
-        elif mode == "recs":
-            pass
-        else:
-            raise
-
-
-        to_display = 30
-        tweet_ids = [t['id'] for t in tweets][:to_display]
     return render_template('search.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
-                            recommendations=recommendations, graph=G,
-                            filter=filter, mode=mode)
+                            recommendations=recommendations, graph=G)
 
+@app.route('/refine')
+def refine():
+    query = request.args.get('q')
+    query = tweet_slicer.get_ascii(query.lower())
+    num_results = 15
+    tweets, _, _, _ = tweet_slicer.slice_up(query, num_results)
+
+    filter = request.args.get('filter')
+    if filter != "'":
+        filter_words = filter.split()
+        filtered_tweets = []
+        for tweet in tweets:
+            for word in filter_words:
+                if tweet['text'].lower().find(word) >= 0:
+                    filtered_tweets.append(tweet)
+                    break
+        tweets = filtered_tweets
+
+    to_display = 30
+    tweet_ids = [t['id'] for t in tweets][:to_display]
+    return render_template('refine.html', query=query, tweet_ids=tweet_ids, filter=filter)
 
 ##mode variable controls flow of index page
 ##"recs" shows three columns of recommendations

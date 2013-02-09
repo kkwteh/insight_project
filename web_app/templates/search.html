@@ -1,72 +1,53 @@
 {% extends "layout.html" %}
 {% block body %}
-	{% if mode != "recs" %}
-		<div class="row">
-			<div class="span6 offset3">
-				{% if tweet_ids != [] %}
-					<h1 class="results_title"> Results for <strong>{{query}}</strong>
-					{% if mode == "filter" %}
-						as in {{filter}}
-					{% endif %}
-					</h1>
-					{% for id in tweet_ids %}
-						<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
-				  {% endfor %}
-				{% endif %}
-			</div>
-		</div> <!-- /row -->
-	{% endif %}
-
-	{% if recommendations != [] %}
-		<div class="row">
-			<div class="span12">
-				<div class="hide_seek">
-					<div class = "row">
-						<div class="span9">
-							<h4 class="recs_title">
-								Results for <strong>{{query}}</strong> as in...
-							</h4>
-						</div>
-						<div class="span3">
-							<span> <a class="all_tweets"href="/search?q={{query}}&filter='">
-								Show All Tweets
-							</a></span>
-						</div>
+	<div class="row">
+		<div class="span12">
+			<div class="hide_seek">
+				<div class = "row">
+					<div class="span6">
+						<h4 class="recs_title">
+							Results for <strong>{{query}}</strong> as in...
+						</h4>
 					</div>
-
-					<div class="row">
-						{% for column, clique in recommendations %}
-							<div class="span3 offset1">
-								<div class="category-wrapper">
-									<strong> <a class="pretty-link clique"
-															href="/search?q={{query}}&filter={{clique}}">
-															{{clique}}
-									</a> </strong>
-								</div>
-							</div>
-						{% endfor %}
+					<div class="span3">
+						<span id="how_recs">
+							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?  </a>
+						</span>
 					</div>
-
-					<div class="row recommendations">
-						<div class = "row">
-							{% for column, clique in recommendations %}
-								<div class="span3 offset1 recommendation_list">
-									{% for id in column %}
-										<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
-									{% endfor %}
-								</div>
-						  {% endfor %}
-						</div> <!-- /row -->
-					</div> <!-- /row -->
-					<div class="row">
-						<span id="how_recs"><strong>
-							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a>
-						</strong></span>
-					</div> <!-- /row -->
+					<div class="span3">
+						<span> <a class="all_tweets"href="/refine?q={{query}}&filter='">
+							Show All Tweets
+						</a></span>
+					</div>
 				</div>
+
+				<div class="row">
+					{% for column, clique in recommendations %}
+						<div class="span3 offset1">
+							<div class="category-wrapper">
+								<strong> <a class="pretty-link clique"
+														href="/refine?q={{query}}&filter={{clique}}">
+														{{clique}}
+								</a> </strong>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="row recommendations">
+					<div class = "row">
+						{% for column, clique in recommendations %}
+							<div class="span3 offset1 recommendation_list">
+								{% for id in column %}
+									<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
+								{% endfor %}
+							</div>
+					  {% endfor %}
+					</div> <!-- /row -->
+				</div> <!-- /row -->
 			</div>
 		</div>
-	{% endif %}
+	</div>
 
 
 	<div class="debug">
