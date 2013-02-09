@@ -19,14 +19,11 @@ def search():
     query = request.args.get('q')
     (count, tweet_ids, tweets, keys, cliques, recommendations, G) = ({} ,[],
                              [], [], [], [], None)
-    if query is None:
+    if query == u'':
         return render_template('index.html')
-    if query is not None:
+    else:
         query = tweet_slicer.get_ascii(query.lower())
-        if is_lite:
-            num_results = 30
-        else:
-            num_results = 15
+        num_results = 15
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                     num_results)
         tweets_text = [t['text'] for t in tweets]
@@ -73,16 +70,6 @@ def graph():
     return render_template('graph.html', graph=G)
 
 if '__main__' == __name__:
-    args = sys.argv[1:]
-
-    if not args:
-        is_lite = False
-    elif args[0] == '--lite':
-        is_lite = True
-    else:
-        print 'usage: [--lite]'
-        sys.exit(1)
-
     # app.run(host="0.0.0.0", port=5001, debug=True)
     port = int(os.environ.get('PORT', 5000))
     app.run(host="0.0.0.0", port=port)
