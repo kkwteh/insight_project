@@ -14,16 +14,22 @@ is_lite = None
 app = Flask(__name__)
 
 
+##mode variable controls flow of index page
+##"recs" shows three columns of recommendations
+##"all" shows one column of all tweets
+##"filter" shows one column of filtered tweets
 @app.route('/')
 def index():
     query = request.args.get('q')
     filter = request.args.get('filter')
     if filter is None:
-        wants_recs = True
+        mode = "recs"
         filter = ""
+    elif filter == "'":
+        mode = "all"
     else:
         filter_words = filter.split()
-        wants_recs = False
+        mode = "filter"
 
     (count, tweet_ids, tweets, keys, cliques, recommendations, G) = ({} ,[],
                              [], [], [], [], None)
@@ -36,12 +42,12 @@ def index():
             num_results = 15
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                     num_results)
-        if wants_recs:
+        if mode == "recs":
             tweets_text = [t['text'] for t in tweets]
             cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
             recommendations = recommender.find(tweets, cliques)
 
-        if filter != "":
+        if mode == "filter":
             filtered_tweets = []
             for tweet in tweets:
                 for word in filter_words:
@@ -49,13 +55,20 @@ def index():
                         filtered_tweets.append(tweet)
                         break
             tweets = filtered_tweets
+        elif mode == "all":
+            pass
+        elif mode == "recs":
+            pass
+        else:
+            raise
+
 
         to_display = 30
         tweet_ids = [t['id'] for t in tweets][:to_display]
     return render_template('index.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G,
-                            filter=filter)
+                            filter=filter, mode=mode)
 
 @app.route('/graph')
 def graph():

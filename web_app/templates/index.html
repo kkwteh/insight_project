@@ -39,12 +39,12 @@
 			</div>
 		{% endif %}
 
-		{% if filter != "" %}
+		{% if mode != "recs" %}
 			<div class="row">
 				<div class="span6 offset3">
 					{% if tweet_ids != [] %}
 						<h1 class="results_title"> Results for <strong>{{query}}</strong>
-						{% if filter != "" %}
+						{% if mode == "filter" %}
 							as in {{filter}}
 						{% endif %}
 						</h1>
@@ -67,7 +67,7 @@
 								</h4>
 							</div>
 							<div class="span3">
-								<span> <a class="all_tweets"href="/?q={{query}}&filter=None">
+								<span> <a class="all_tweets"href="/?q={{query}}&filter='">
 									Show All Tweets
 								</a></span>
 							</div>
