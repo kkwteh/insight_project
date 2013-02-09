@@ -56,10 +56,6 @@ def refine():
     tweet_ids = [t['id'] for t in tweets][:to_display]
     return render_template('refine.html', query=query, tweet_ids=tweet_ids, filter=filter)
 
-##mode variable controls flow of index page
-##"recs" shows three columns of recommendations
-##"all" shows one column of all tweets
-##"filter" shows one column of filtered tweets
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -68,6 +64,11 @@ def index():
 def graph():
     G = request.args.get('G')
     return render_template('graph.html', graph=G)
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 
 if '__main__' == __name__:
     # app.run(host="0.0.0.0", port=5001, debug=True)
