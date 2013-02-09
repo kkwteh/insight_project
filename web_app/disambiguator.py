@@ -14,12 +14,8 @@ is_lite = None
 app = Flask(__name__)
 
 
-##mode variable controls flow of index page
-##"recs" shows three columns of recommendations
-##"all" shows one column of all tweets
-##"filter" shows one column of filtered tweets
-@app.route('/')
-def index():
+@app.route('/search')
+def search():
     query = request.args.get('q')
     filter = request.args.get('filter')
     if filter is None:
@@ -65,10 +61,19 @@ def index():
 
         to_display = 30
         tweet_ids = [t['id'] for t in tweets][:to_display]
-    return render_template('index.html', query=query, tweet_ids=tweet_ids,
+    return render_template('search.html', query=query, tweet_ids=tweet_ids,
                             count=count, keys=keys, len=len(keys),
                             recommendations=recommendations, graph=G,
                             filter=filter, mode=mode)
+
+
+##mode variable controls flow of index page
+##"recs" shows three columns of recommendations
+##"all" shows one column of all tweets
+##"filter" shows one column of filtered tweets
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 @app.route('/graph')
 def graph():
