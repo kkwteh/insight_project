@@ -26,12 +26,12 @@ body {
 	float: right;
 }
 
-.results_title{
-	font-size: 2em;
+#how_recs a{
+	padding:5px;
 }
 
-.all_tweets{
-	float:right;
+.results_title{
+	font-size: 2em;
 }
 
 .clique{
