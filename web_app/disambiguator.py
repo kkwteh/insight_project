@@ -23,7 +23,7 @@ def search():
         return render_template('index.html')
     else:
         query = tweet_slicer.get_ascii(query.lower())
-        num_results = 15
+        num_results = 20
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                     num_results)
         tweets_text = [t['text'] for t in tweets]
@@ -38,7 +38,7 @@ def search():
 def refine():
     query = request.args.get('q')
     query = tweet_slicer.get_ascii(query.lower())
-    num_results = 15
+    num_results = 20
     tweets, _, _, _ = tweet_slicer.slice_up(query, num_results)
 
     filter = request.args.get('filter')

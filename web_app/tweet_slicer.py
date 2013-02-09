@@ -64,8 +64,9 @@ def clean_tweets(query, tweets):
 
 def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
-    capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b and b<1.0]
+    capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b]
     capital_frac.sort(key= lambda (a,b): -cnt[a])
+
     just_counts = [cnt[key] for key in keys]
 
     total_candidates = num_results
