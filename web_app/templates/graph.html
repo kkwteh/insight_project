@@ -1,15 +1,5 @@
-<!DOCTYPE HTML>
-
-<head>
-	<link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/bootstrap-responsive.min.css"/>
-	<link rel="stylesheet" type="text/css" href="/static/style.css"/>
-
-	<title>cluster-pluck</title>
-
-</head>
-
-<body>
+{% extends "layout.html" %}
+{% block d3 %}
 	<script type = "text/javascript" src="/static/d3.v3.min.js"></script>
 	<script>
 	var width = 960,
@@ -67,30 +57,14 @@
 
 
 	</script>
+{% endblock %}
 
-	<div class="container">
-
-		<div class="navbar navbar-inverse navbar-fixed-top">
-		  <div class="navbar-inner">
-		    <a class="brand" href="/">cluster-pluck by kevin teh</a>
-
-				<form class="navbar-search pull-right" action="/">
-				  <input type="text" class="search-query" name="q" placeholder="Search" spellcheck="false" autocomplete="off">
-				</form>
-				<ul class="nav pull-left">
-				  <li><a target="_blank"  href="http://www.slideshare.net/tehkevin1/kevin-teh-insight-presentation">About</a></li>
-				</ul>
-		  </div>
+{% block body %}
+	<div class="row">
+		<div class="span12">
+			<p>
+				Candidates for recommendation are taken from the set of words appearing in Twitter search results. They are chosen based on the frequency of their apperance and the frequency with which they are capitalized. Candidates are linked if they appear together with the original query in more than fifteen tweets. Recommendations are either clusters with two or more nodes or single nodes which appear very frequently.
+			</p>
 		</div>
-
-		<div class="row">
-			<div class="span12">
-				<p>
-					Candidates for recommendation are taken from the set of words appearing in Twitter search results. They are chosen based on the frequency of their apperance and the frequency with which they are capitalized. Candidates are linked if they appear together with the original query in more than fifteen tweets. Recommendations are either clusters with two or more nodes or single nodes which appear very frequently.
-				</p>
-			</div>
-		</div>
-
-	</div> <!-- /container -->
-
-</body>
+	</div>
+{% endblock %}
