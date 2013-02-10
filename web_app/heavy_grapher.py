@@ -26,7 +26,6 @@ def compute_graph(query, top_results, tweets):
             text = tweet[u'text'].lower()
             if text.find(w1) == -1 or text.find(w2) == -1:
                 page.remove(tweet)
-        print len(page), w1, w2
         if len(page) >= 10:
             for tweet in page:
                 text = tweet[u'text']
@@ -46,8 +45,6 @@ def prescreen(query, top_results, tweets):
             text = tweet.lower()
             if text.count(w1) > 0 and text.count(w2) > 0:
                 pair_count += 1
-        print "pair count", w1, w2
-        print pair_count
         if pair_count > 0 and pair_count < edge_threshold:
             call_backs.append((w1,w2))
         if pair_count >= edge_threshold:
