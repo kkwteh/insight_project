@@ -40,7 +40,9 @@ def simple_get(query):
         tweet['text'] = get_ascii(tweet[u'text'])
     return tweets
 
-def slice_up(query, num_results):
+def slice_up(query):
+    query = get_ascii(query.lower())
+    num_results = 20
     top_twitter_words = init_data()
     tweets = simple_get(query)
     split_tweets = clean_tweets(query, tweets)

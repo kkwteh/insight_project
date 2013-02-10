@@ -20,10 +20,7 @@ def search():
     if query == u'':
         return render_template('index.html')
     else:
-        query = tweet_slicer.get_ascii(query.lower())
-        num_results = 20
-        tweets, count, keys, top_results = tweet_slicer.slice_up(query,
-                                                    num_results)
+        tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         ids_kept = 150
         all_ids = [t['id'] for t in tweets][:ids_kept]
         tweets_text = [t['text'] for t in tweets]
