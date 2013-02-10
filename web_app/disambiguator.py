@@ -30,7 +30,7 @@ def search():
         cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
         cluster_ids_all, clique_strings = recommender.find(tweets, cliques)
         cluster_ids_all = cluster_ids_all[:ids_kept]
-        preview_length = 10
+        preview_length = 5
         preview_ids = [column[:preview_length] for column in cluster_ids_all]
 
     return render_template('search.html',
