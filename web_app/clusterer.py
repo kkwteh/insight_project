@@ -1,7 +1,6 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
 import tweet_slicer
 import heavy_grapher
-import light_grapher
 import operator
 import sys
 import itertools
