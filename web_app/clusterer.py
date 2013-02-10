@@ -29,11 +29,11 @@ def heavy_clusters(G, count, top_results):
     singles = [[key] for key in count if (count[key] >= heavy*total_words
                                             and key not in nodes_seen)]
     sundry.extend(singles)
-    sundry.sort(key= lambda clique: -max_weight(clique, count))
+    sundry.sort(key= lambda clique: -total_weight(clique, count))
     hot_sets = sundry[:3]
     return hot_sets
 
-def max_weight(clique,count):
+def total_weight(clique,count):
     print clique, ": clique weight"
     print sum([count[w] for w in clique])
     return sum([count[w] for w in clique])
