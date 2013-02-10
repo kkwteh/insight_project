@@ -24,6 +24,18 @@ def init_data():
     top_words = [pair[0] for pair in top_pairs]
     return top_words
 
+def simple_get(query):
+    twitter_search = pages_getter.init_twitter()
+    num_pages = 15
+    per_page = 100
+    query_list = [query for i in range(num_pages)]
+    page_nums = [i + 1 for i in range(num_pages)]
+    pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search, query_list, page_nums, per_page)
+    pages = [pair[1] for pair in pages_with_queries]
+    tweets = flatten(pages)
+    for tweet in tweets[:]:
+        tweet['text'] = get_ascii(tweet[u'text'])
+    return tweets
 
 def slice_up(query, num_results):
     twitter_search = pages_getter.init_twitter()
@@ -36,7 +48,7 @@ def slice_up(query, num_results):
     pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search, query_list, page_nums, per_page)
     pages = [pair[1] for pair in pages_with_queries]
     tweets = flatten(pages)
-    for tweet in tweets:
+    for tweet in tweets[:]:
         tweet['text'] = get_ascii(tweet[u'text'])
     split_tweets = clean_tweets(query, tweets)
     capital_count, count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)

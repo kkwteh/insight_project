@@ -37,10 +37,9 @@ def search():
 @app.route('/refine')
 def refine():
     query = request.args.get('q')
+    page = request.args.get('page')
     query = tweet_slicer.get_ascii(query.lower())
-    num_results = 20
-    tweets, _, _, _ = tweet_slicer.slice_up(query, num_results)
-
+    tweets = tweet_slicer.simple_get(query)
     filter = request.args.get('filter')
     if filter != "'":
         filter_words = filter.split()
@@ -51,9 +50,8 @@ def refine():
                     filtered_tweets.append(tweet)
                     break
         tweets = filtered_tweets
-
-    to_display = 30
-    tweet_ids = [t['id'] for t in tweets][:to_display]
+    tweets_per_page = 15
+    tweet_ids = [t['id'] for t in tweets][:tweets_per_page]
     return render_template('refine.html', query=query, tweet_ids=tweet_ids, filter=filter)
 
 @app.route('/')
