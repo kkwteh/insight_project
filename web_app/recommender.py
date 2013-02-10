@@ -11,8 +11,8 @@ def find(tweets, cliques):
                 if norm_tweet.find(w) > -1:
                     rec_tweets.append(tweet['id'])
                     break
-        if len(rec_tweets) >= 10:
-            clique_string = " ".join(clique)
-            recommendations.append([rec_tweets[:10], clique_string])
+        rec_column_length = 10
+        clique_string = " ".join(clique)
+        recommendations.append([rec_tweets[:rec_column_length], clique_string])
         print(clique)
     return recommendations
