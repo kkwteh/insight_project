@@ -9,36 +9,28 @@ import json
 import networkx as nx
 import sets
 
-def heavy_clusters(G, count, top_results):
-    comps = nx.connected_components(G)
-    sundry = [comp for comp in comps if len(comp) >= 2]
-    sundry.sort(key= lambda clique: -len(clique))
+def get_nodes_seen(sundry):
     if len(sundry) >= 2:
         nodes_seen = reduce(lambda x, y : set(x).union(set(y)), sundry)
     elif len(sundry) == 1:
         nodes_seen = set(sundry[0])
     else:
         nodes_seen = set()
+    return nodes_seen
+
+def heavy_clusters(G, count, top_results):
+    comps = nx.connected_components(G)
+    sundry = [comp for comp in comps if len(comp) >= 2]
+    sundry.sort(key= lambda clique: -len(clique))
+    nodes_seen = get_nodes_seen(sundry)
 
     total_words = sum([count[key] for key in count])
-    super_heavy = 0.04
-    preface = [[key] for key in count if (count[key] >= super_heavy*total_words
+    heavy = 0.01
+    singles = [[key] for key in count if (count[key] >= heavy*total_words
                                             and key not in nodes_seen)]
-    preface.extend(sundry)
-
-    chosen_ones = []
-    for group in preface:
-        for word in group:
-            chosen_ones.append(word)
-
-    kinda_heavy = 0.01
-    left_overs = [[word] for word in top_results if (word not in chosen_ones
-                                    and count[word] >= kinda_heavy*total_words)]
-    left_overs.sort(key= lambda x : -count[x[0]])
-    filler_length = 3 - len(preface)
-    preface.extend(left_overs[:filler_length])
-
-    hot_sets = preface[:3]
+    sundry.extend(singles)
+    sundry.sort(key= lambda clique: -max_weight(clique, count))
+    hot_sets = sundry[:3]
     return hot_sets
 
 def max_weight(clique,count):
