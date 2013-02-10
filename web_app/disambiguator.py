@@ -10,7 +10,6 @@ import os
 from flask import Flask, render_template
 from flask import request
 
-is_lite = None
 app = Flask(__name__)
 
 
@@ -27,7 +26,7 @@ def search():
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                     num_results)
         tweets_text = [t['text'] for t in tweets]
-        cliques, G = clusterer.analyze(is_lite, query, tweets_text, count, top_results)
+        cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
         recommendations = recommender.find(tweets, cliques)
 
     return render_template('search.html', query=query, tweet_ids=tweet_ids,
