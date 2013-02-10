@@ -67,8 +67,18 @@ def graph():
 def about():
     return render_template('about.html')
 
-
 if '__main__' == __name__:
-    # app.run(host="0.0.0.0", port=5001, debug=True)
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host="0.0.0.0", port=port)
+    args = sys.argv[1:]
+    if not args:
+        debug = False
+    elif args[0] == '--debug':
+        debug = True
+    else:
+        print 'usage: [--debug]'
+        sys.exit(1)
+
+    if debug == False:
+        port = int(os.environ.get('PORT', 5000))
+        app.run(host="0.0.0.0", port=port)
+    else:
+        app.run(host="0.0.0.0", port=5000, debug=True)
