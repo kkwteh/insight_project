@@ -7,6 +7,7 @@ import recommender
 import json
 import sys
 import os
+import re
 from flask import Flask, render_template
 from flask import request
 
@@ -23,57 +24,54 @@ def search():
         num_results = 20
         tweets, count, keys, top_results = tweet_slicer.slice_up(query,
                                                     num_results)
+        ids_kept = 150
+        all_ids = [t['id'] for t in tweets][:ids_kept]
         tweets_text = [t['text'] for t in tweets]
         cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
         cluster_ids_all, clique_strings = recommender.find(tweets, cliques)
+        cluster_ids_all = cluster_ids_all[:ids_kept]
         preview_length = 10
         preview_ids = [column[:preview_length] for column in cluster_ids_all]
 
     return render_template('search.html',
-                            query=query,
-                            count=count,
-                            keys=keys,
-                            len=len(keys),
-                            recommendations=preview_ids,
-                            cliques=clique_strings,
-                            graph=G,
-                            clusters_all = cluster_ids_all)
+                            query= query,
+                            count= count,
+                            keys= keys,
+                            len= len(keys),
+                            recommendations= preview_ids,
+                            cliques= clique_strings,
+                            graph= G,
+                            clusters_all= cluster_ids_all,
+                            all_ids= all_ids)
 
 @app.route('/refine')
 def refine():
     query = request.args.get('q')
     page_number = int(request.args.get('page'))
-    query = tweet_slicer.get_ascii(query.lower())
+    clique = request.args.get('filter')
+    ids_string = request.args.get('ids')
+    clique_ids = parse_ints(ids_string)
+
     tweets_per_page = 15
-    tweets = tweet_slicer.simple_get(query)
-    filter = request.args.get('filter')
-    if filter != "'":
-        filter_words = filter.split()
-        filtered_tweets = []
-        for tweet in tweets:
-            for word in filter_words:
-                if tweet['text'].lower().find(word) >= 0:
-                    filtered_tweets.append(tweet)
-                    break
-        tweets = filtered_tweets
 
-    next_page_number = get_next_number(tweets, page_number, tweets_per_page)
-    tweet_ids = tweet_ids_page(tweets, page_number, tweets_per_page)
+    next_page_number = get_next_number(clique_ids, page_number, tweets_per_page)
+    page_ids = tweet_ids_page(clique_ids, page_number, tweets_per_page)
+    return render_template('refine.html', query=query, page_ids=page_ids, filter=clique, next_page=next_page_number, ids=ids_string)
 
-    return render_template('refine.html', query=query, tweet_ids=tweet_ids, filter=filter, next_page=next_page_number)
+def parse_ints(ids_string):
+    return re.sub("[\[\],]","", ids_string).split()
 
-
-def tweet_ids_page(tweets, page_number, tweets_per_page):
+def tweet_ids_page(clique_ids, page_number, tweets_per_page):
     if page_number == -1:
         raise
     else:
         n = page_number
         pp = tweets_per_page
-        return [t['id'] for t in tweets[pp*(n - 1):pp*n]]
+        return [id_num for id_num in clique_ids[pp*(n - 1):pp*n]]
 
 
-def get_next_number(tweets, page_number, tweets_per_page):
-    if len(tweets) > tweets_per_page * page_number:
+def get_next_number(clique_ids, page_number, tweets_per_page):
+    if len(clique_ids) > tweets_per_page * page_number:
         return page_number + 1
     else:
         return -1

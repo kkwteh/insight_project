@@ -11,7 +11,7 @@
 					</div>
 					<div class="span6">
 						<span id="how_recs">
-							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a> <a class="all_tweets"href="/refine?q={{query}}&filter='&page=1">
+							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a> <a class="all_tweets"href="/refine?q={{query}}&filter='&page=1&ids={{all_ids}}">
 							Show All Tweets
 						</a></span>
 					</div>
@@ -22,7 +22,7 @@
 						<div class="span3 offset1">
 							<div class="category-wrapper">
 								<strong> <a class="pretty-link clique"
-														href="/refine?q={{query}}&filter={{cliques[loop.index0]}}&page=1">
+														href="/refine?q={{query}}&filter={{cliques[loop.index0]}}&page=1&ids={{clusters_all[loop.index0]}}">
 														{{cliques[loop.index0]}}
 								</a> </strong>
 							</div>
