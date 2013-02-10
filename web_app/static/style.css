@@ -22,6 +22,10 @@ body {
 }
 
 
+.next_link{
+	float: right;
+}
+
 #how_recs{
 	float: right;
 }

@@ -37,8 +37,9 @@ def search():
 @app.route('/refine')
 def refine():
     query = request.args.get('q')
-    page = request.args.get('page')
+    page_number = int(request.args.get('page'))
     query = tweet_slicer.get_ascii(query.lower())
+    tweets_per_page = 15
     tweets = tweet_slicer.simple_get(query)
     filter = request.args.get('filter')
     if filter != "'":
@@ -50,9 +51,28 @@ def refine():
                     filtered_tweets.append(tweet)
                     break
         tweets = filtered_tweets
-    tweets_per_page = 15
-    tweet_ids = [t['id'] for t in tweets][:tweets_per_page]
-    return render_template('refine.html', query=query, tweet_ids=tweet_ids, filter=filter)
+
+    next_page_number = get_next_number(tweets, page_number, tweets_per_page)
+    tweet_ids = tweet_ids_page(tweets, page_number, tweets_per_page)
+
+    return render_template('refine.html', query=query, tweet_ids=tweet_ids, filter=filter, next_page=next_page_number)
+
+
+def tweet_ids_page(tweets, page_number, tweets_per_page):
+    if page_number == -1:
+        raise
+    else:
+        n = page_number
+        pp = tweets_per_page
+        return [t['id'] for t in tweets[pp*(n - 1):pp*n]]
+
+
+def get_next_number(tweets, page_number, tweets_per_page):
+    if len(tweets) > tweets_per_page * page_number:
+        return page_number + 1
+    else:
+        return -1
+
 
 @app.route('/')
 def index():

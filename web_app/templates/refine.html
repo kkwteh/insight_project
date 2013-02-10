@@ -11,6 +11,11 @@
 				{% for id in tweet_ids %}
 					<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 			  {% endfor %}
+				{% if next_page != -1 %}
+					<a class=" next_link" href="/refine?q={{query}}&filter={{filter}}&page={{next_page}}">
+							Next Page
+					</a>
+				{% endif %}
 			{% endif %}
 		</div>
 	</div> <!-- /row -->
