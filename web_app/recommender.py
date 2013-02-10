@@ -2,7 +2,8 @@ import string
 import itertools
 
 def find(tweets, cliques):
-    recommendations = []
+    cluster_ids_all = []
+    clique_strings = []
     for clique in cliques:
         rec_tweets = []
         for tweet in tweets:
@@ -11,8 +12,8 @@ def find(tweets, cliques):
                 if norm_tweet.find(w) > -1:
                     rec_tweets.append(tweet['id'])
                     break
-        rec_column_length = 10
         clique_string = " ".join(clique)
-        recommendations.append([rec_tweets[:rec_column_length], clique_string])
+        cluster_ids_all.append(rec_tweets)
+        clique_strings.append(clique_string)
         print(clique)
-    return recommendations
+    return cluster_ids_all, clique_strings

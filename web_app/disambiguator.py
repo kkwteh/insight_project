@@ -16,8 +16,6 @@ app = Flask(__name__)
 @app.route('/search')
 def search():
     query = request.args.get('q')
-    (count, tweet_ids, tweets, keys, cliques, recommendations, G) = ({} ,[],
-                             [], [], [], [], None)
     if query == u'':
         return render_template('index.html')
     else:
@@ -27,11 +25,19 @@ def search():
                                                     num_results)
         tweets_text = [t['text'] for t in tweets]
         cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
-        recommendations = recommender.find(tweets, cliques)
+        cluster_ids_all, clique_strings = recommender.find(tweets, cliques)
+        preview_length = 10
+        preview_ids = [column[:preview_length] for column in cluster_ids_all]
 
-    return render_template('search.html', query=query, tweet_ids=tweet_ids,
-                            count=count, keys=keys, len=len(keys),
-                            recommendations=recommendations, graph=G)
+    return render_template('search.html',
+                            query=query,
+                            count=count,
+                            keys=keys,
+                            len=len(keys),
+                            recommendations=preview_ids,
+                            cliques=clique_strings,
+                            graph=G,
+                            clusters_all = cluster_ids_all)
 
 @app.route('/refine')
 def refine():
