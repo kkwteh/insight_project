@@ -33,7 +33,10 @@ def simple_get(query):
     per_page = 100
     query_list = [query for i in range(num_pages)]
     page_nums = [i + 1 for i in range(num_pages)]
-    pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search, query_list, page_nums, per_page)
+    pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search,
+                                                            query_list,
+                                                            page_nums,
+                                                            per_page)
     pages = [pair[1] for pair in pages_with_queries]
     tweets = flatten(pages)
     return tweets
@@ -45,8 +48,14 @@ def slice_up(query):
     top_twitter_words = init_data()
     tweets = simple_get(query)
     split_tweets = clean_tweets(query, tweets)
-    capital_count, count, keys = count_words_in_tweets(query, split_tweets, top_twitter_words)
-    top_results = extract_top_results(query, num_results, capital_count, count, keys)
+    capital_count, count, keys = count_words_in_tweets(query,
+                                                split_tweets,
+                                                top_twitter_words)
+    top_results = extract_top_results(query,
+                                num_results,
+                                capital_count,
+                                count,
+                                keys)
     return tweets, count, keys, top_results
 
 
@@ -71,7 +80,8 @@ def clean_tweets(query, tweets):
 
 
 def extract_top_results(query, num_results, capital_cnt, cnt, keys):
-    capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in capital_cnt if cnt[key] > 1]
+    capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in
+                                                    capital_cnt if cnt[key] > 1]
     capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b]
     capital_frac.sort(key= lambda (a,b): -cnt[a])
 
@@ -87,11 +97,13 @@ def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     heavy_candidates = heavy_candidates[:max_heavy_candidates]
 
     num_capital_candidates = (total_candidates - len(heavy_candidates))
-    capital_candidates = [a for (a,b) in capital_frac if a not in heavy_candidates]
+    capital_candidates = [a for (a,b) in capital_frac if a not in
+                                                        heavy_candidates]
     capital_candidates = capital_candidates[:num_capital_candidates]
     top_results = heavy_candidates + capital_candidates
 
-    candidate_pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
+    candidate_pairs = [(x,y) for (x,y) in itertools.product(top_results,
+                                                        repeat = 2) if x < y ]
     for w1, w2 in candidate_pairs:
         if have_common_stems(w1,w2):
             descending_pair = sorted([w1,w2], key= lambda w: -cnt[w])
@@ -132,16 +144,16 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
 
 
 def have_common_stems(word1, word2):
-        stemmer = PorterStemmer()
-        if (stemmer.stem(word1) == stemmer.stem(word2)):
-            return True
-        else:
-            return False
+    stemmer = PorterStemmer()
+    if (stemmer.stem(word1) == stemmer.stem(word2)):
+        return True
+    else:
+        return False
 
 
 def related(word_list1, word_list2):
-        pairs = itertools.product(word_list1, word_list2)
-        for a, b in pairs:
-            if (a.find(b) != -1 or b.find(a) != -1):
-                 return True
-        return False
+    pairs = itertools.product(word_list1, word_list2)
+    for a, b in pairs:
+        if (a.find(b) != -1 or b.find(a) != -1):
+             return True
+    return False

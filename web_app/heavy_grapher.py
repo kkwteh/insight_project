@@ -17,7 +17,10 @@ def compute_graph(query, top_results, tweets):
     print "query list length"
     print len(query_list)
     per_page = 15
-    pages_with_queries  = pages_getter.get_pages_of_tweets(searcher, query_list, page_nums, per_page)
+    pages_with_queries  = pages_getter.get_pages_of_tweets(searcher,
+                                                         query_list,
+                                                         page_nums,
+                                                         per_page)
     for query, page in pages_with_queries:
         w1 = query.split()[0]
         w2 = query.split()[1]
@@ -36,7 +39,8 @@ def compute_graph(query, top_results, tweets):
 def prescreen(query, top_results, tweets):
     G = nx.Graph()
     G.add_nodes_from(top_results)
-    pairs = [(x,y) for (x,y) in itertools.product(top_results,repeat = 2) if x < y ]
+    pairs = [(x,y) for (x,y) in itertools.product(top_results,
+                                                    repeat = 2) if x < y ]
 
     edge_threshold = 15
     call_backs = []

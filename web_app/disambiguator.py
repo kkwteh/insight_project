@@ -54,7 +54,11 @@ def refine():
 
     next_page_number = get_next_number(clique_ids, page_number, tweets_per_page)
     page_ids = tweet_ids_page(clique_ids, page_number, tweets_per_page)
-    return render_template('refine.html', query=query, page_ids=page_ids, filter=clique, next_page=next_page_number, ids=ids_string)
+    return render_template('refine.html', query=query,
+                                        page_ids=page_ids,
+                                        filter=clique,
+                                        next_page=next_page_number,
+                                        ids=ids_string)
 
 
 def parse_ints(ids_string):
