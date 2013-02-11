@@ -62,7 +62,7 @@ class TweetDownloader(threading.Thread):
 
 
 def get_pages_of_tweets(twitter_search, query, page_nums, per_page):
-    num_threads=params.number_of_threads
+    num_threads=len(query)
     q = Queue()
     threads = []
 

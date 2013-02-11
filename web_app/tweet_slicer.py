@@ -139,7 +139,7 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
             if (word.lower() not in low_information_words and
             re.search("[0-9\W]",word) is None and
             related([word.lower()],query_words) is not True and
-            len(word) > min_len):
+            len(word) >= min_len):
                 cnt[word.lower()] += 1
                 if len(re.findall("\A[A-Z]", word)) == 1:
                     capital_cnt[word.lower()] += 1

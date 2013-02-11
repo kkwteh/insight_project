@@ -11,9 +11,7 @@ number_candidates_considered = 20
 capitalization_frequency_cutoff = 0.5
 proportion_of_heavy_candidates = 0.4
 counts_as_heavy_factor = 0.005
-minimum_word_length = 2
-
-number_of_threads = 10
+minimum_word_length = 3
 
 edge_threshold = 15
 relevance_threshold = 10
