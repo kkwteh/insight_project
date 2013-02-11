@@ -30,6 +30,11 @@ body {
 	padding-right:30px;
 }
 
+iframe.slides{
+	margin: 0 auto;
+	display:block;
+}
+
 .next_link{
 	float: right;
 }
