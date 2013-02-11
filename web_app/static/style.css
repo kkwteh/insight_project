@@ -21,6 +21,14 @@ body {
   color: #fff;
 }
 
+.navbar a.brand{
+	margin-left:0px;
+	padding-left:30px;
+}
+
+.navbar-search{
+	padding-right:30px;
+}
 
 .next_link{
 	float: right;
