@@ -95,8 +95,6 @@ def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     for w1, w2 in candidate_pairs:
         if have_common_stems(w1,w2):
             descending_pair = sorted([w1,w2], key= lambda w: -cnt[w])
-            print descending_pair
-            print [cnt[w] for w in descending_pair]
             top_results, cnt = consolidate (descending_pair, top_results, cnt)
 
     top_results.sort(key = lambda w: -cnt[w])
