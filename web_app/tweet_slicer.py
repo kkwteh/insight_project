@@ -36,12 +36,10 @@ def simple_get(query):
     pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search, query_list, page_nums, per_page)
     pages = [pair[1] for pair in pages_with_queries]
     tweets = flatten(pages)
-    for tweet in tweets[:]:
-        tweet['text'] = get_ascii(tweet[u'text'])
     return tweets
 
 def slice_up(query):
-    query = get_ascii(query.lower())
+    query = query.lower()
     num_results = 20
     top_twitter_words = init_data()
     tweets = simple_get(query)
@@ -144,7 +142,3 @@ def related(word_list1, word_list2):
             if (a.find(b) != -1 or b.find(a) != -1):
                  return True
         return False
-
-
-def get_ascii(u_string):
-    return unicodedata.normalize('NFKD', u_string).encode('ascii','ignore')
