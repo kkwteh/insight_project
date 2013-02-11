@@ -19,7 +19,7 @@ def init_twitter():
                     OAuth_creds[3]))
 
 
-def download_page(twitter_search, query, page_num, per_page, was_seen=None):
+def download_page(twitter_search, query, page_num, per_page):
     """ Download a page of tweets for the query"""
 
     if page_num != None:
@@ -37,13 +37,12 @@ class TweetDownloader(threading.Thread):
     download their top artists
     """
 
-    def __init__(self, queue, twitter_search, was_seen=None):
+    def __init__(self, queue, twitter_search):
         threading.Thread.__init__(self)
         self._stop = threading.Event()
         self.pages = []
         self.queue = queue
         self.twitter_search = twitter_search
-        self.was_seen = was_seen
 
     def stop(self):
         self._stop.set()
@@ -64,29 +63,21 @@ class TweetDownloader(threading.Thread):
 
             query, page_num, per_page = self.queue.get()
             page = download_page(self.twitter_search, query, page_num,
-                                            per_page, self.was_seen)
+                                            per_page)
             self.pages.append((query,page))
             print "Successfully processed page_num: ", page_num,
             print " by thread: ", self.ident
 
 
-def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=None, lite=False):
+def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=None):
     if num_threads is None:
         num_threads = len(query)
-    """ Download 'num_pages' pages from Twitter api.
-    These documents are downloaded in parallel using
-    separate threads
 
-    """
-    if lite == True:
-        was_seen = seer()
-    else:
-        was_seen = None
     q = Queue()
     threads = []
 
     for i in xrange(num_threads):
-        thread = TweetDownloader(q, twitter_search, was_seen)
+        thread = TweetDownloader(q, twitter_search)
         thread.setDaemon(True)
         thread.start()
         threads.append(thread)
