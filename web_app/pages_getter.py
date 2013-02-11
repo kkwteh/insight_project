@@ -69,6 +69,7 @@ class TweetDownloader(threading.Thread):
             print "Successfully processed page_num: ", page_num,
             print " by thread: ", self.ident
 
+
 #query is an array of queries
 #page_nums is an array of page numbers
 def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=None, lite=False):

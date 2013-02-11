@@ -32,6 +32,7 @@ def compute_graph(query, top_results, tweets):
             G.add_edge(w1, w2, weight=1)
     return G
 
+
 def prescreen(query, top_results, tweets):
     G = nx.Graph()
     G.add_nodes_from(top_results)

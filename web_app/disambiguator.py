@@ -41,6 +41,7 @@ def search():
                             clusters_all= cluster_ids_all,
                             all_ids= all_ids)
 
+
 @app.route('/refine')
 def refine():
     query = request.args.get('q')
@@ -55,8 +56,10 @@ def refine():
     page_ids = tweet_ids_page(clique_ids, page_number, tweets_per_page)
     return render_template('refine.html', query=query, page_ids=page_ids, filter=clique, next_page=next_page_number, ids=ids_string)
 
+
 def parse_ints(ids_string):
     return re.sub("[\[\],]","", ids_string).split()
+
 
 def tweet_ids_page(clique_ids, page_number, tweets_per_page):
     if page_number == -1:
@@ -78,14 +81,17 @@ def get_next_number(clique_ids, page_number, tweets_per_page):
 def index():
     return render_template('index.html')
 
+
 @app.route('/graph')
 def graph():
     G = request.args.get('G')
     return render_template('graph.html', graph=G)
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 if '__main__' == __name__:
     args = sys.argv[1:]

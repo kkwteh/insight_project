@@ -38,6 +38,7 @@ def simple_get(query):
     tweets = flatten(pages)
     return tweets
 
+
 def slice_up(query):
     query = query.lower()
     num_results = 20
@@ -48,8 +49,10 @@ def slice_up(query):
     top_results = extract_top_results(query, num_results, capital_count, count, keys)
     return tweets, count, keys, top_results
 
+
 def flatten(pages):
     return list(itertools.chain.from_iterable(pages))
+
 
 def clean_tweets(query, tweets):
     split_tweets = sets.Set()
@@ -99,6 +102,7 @@ def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     top_results.sort(key = lambda w: -cnt[w])
     return top_results
 
+
 def consolidate (descending_pair, top_results, count):
     high, low = descending_pair
     if high not in top_results or low not in top_results:
@@ -135,6 +139,7 @@ def have_common_stems(word1, word2):
             return True
         else:
             return False
+
 
 def related(word_list1, word_list2):
         pairs = itertools.product(word_list1, word_list2)

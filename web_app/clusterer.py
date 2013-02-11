@@ -17,6 +17,7 @@ def get_nodes_seen(sundry):
         nodes_seen = set()
     return nodes_seen
 
+
 def heavy_clusters(G, count, top_results):
     comps = nx.connected_components(G)
     sundry = [comp for comp in comps if len(comp) >= 2]
@@ -32,10 +33,12 @@ def heavy_clusters(G, count, top_results):
     hot_sets = sundry[:3]
     return hot_sets
 
+
 def total_weight(clique,count):
     print clique, ": clique weight"
     print sum([count[w] for w in clique])
     return sum([count[w] for w in clique])
+
 
 def analyze(query, tweets, count, top_results):
     G = heavy_grapher.compute_graph(query, top_results, tweets)
