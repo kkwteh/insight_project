@@ -20,8 +20,6 @@ def init_twitter():
 
 
 def download_page(twitter_search, query, page_num, per_page):
-    """ Download a page of tweets for the query"""
-
     if page_num != None:
         page = twitter_search.search(q=query, lang="en", page=page_num,                                             rpp=per_page)['results']
 
@@ -30,13 +28,6 @@ def download_page(twitter_search, query, page_num, per_page):
 
 
 class TweetDownloader(threading.Thread):
-    """ A class to download a user's top Artists
-
-    To be used as an individual thread to take
-    a list of users from a shared queue and
-    download their top artists
-    """
-
     def __init__(self, queue, twitter_search):
         threading.Thread.__init__(self)
         self._stop = threading.Event()
