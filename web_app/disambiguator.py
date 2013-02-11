@@ -3,6 +3,7 @@
 
 import clusterer
 import tweet_slicer
+import params
 import recommender
 import json
 import sys
@@ -21,13 +22,13 @@ def search():
         return render_template('index.html')
     else:
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
-        ids_kept = 150
+        ids_kept = params.ids_kept_per_cluster
         all_ids = [t['id'] for t in tweets][:ids_kept]
         tweets_text = [t['text'] for t in tweets]
         cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
         cluster_ids_all, clique_strings = recommender.find(tweets, cliques)
         cluster_ids_all = [col[:ids_kept] for col in cluster_ids_all]
-        preview_length = 5
+        preview_length = params.preview_column_length
         preview_ids = [column[:preview_length] for column in cluster_ids_all]
 
     return render_template('search.html',
@@ -50,7 +51,7 @@ def refine():
     ids_string = request.args.get('ids')
     clique_ids = parse_ints(ids_string)
 
-    tweets_per_page = 15
+    tweets_per_page = params.tweets_per_page
 
     next_page_number = get_next_number(clique_ids, page_number, tweets_per_page)
     page_ids = tweet_ids_page(clique_ids, page_number, tweets_per_page)

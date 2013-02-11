@@ -1,4 +1,5 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
+import params
 import tweet_slicer
 import heavy_grapher
 import operator
@@ -25,12 +26,13 @@ def heavy_clusters(G, count, top_results):
     nodes_seen = get_nodes_seen(sundry)
 
     total_words = sum([count[key] for key in count])
-    heavy = 0.01
+    heavy = params.candidate_is_heavy_factor
     singles = [[key] for key in count if (count[key] >= heavy*total_words
                                             and key not in nodes_seen)]
     sundry.extend(singles)
     sundry.sort(key= lambda clique: -total_weight(clique, count))
-    hot_sets = sundry[:3]
+    cols = params.number_clusters_on_page
+    hot_sets = sundry[:cols]
     return hot_sets
 
 

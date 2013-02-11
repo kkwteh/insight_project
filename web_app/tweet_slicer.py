@@ -1,4 +1,7 @@
 #!/Users/teh/code/insight_project/ENV/bin/python
+import pages_getter
+import top_words_data
+import params
 import sys
 import itertools
 import time
@@ -11,8 +14,6 @@ import sets
 import unicodedata
 import threading
 import urllib2
-import pages_getter
-import top_words_data
 from Queue import Queue
 from collections import Counter
 from nltk.tokenize import word_tokenize
@@ -44,7 +45,7 @@ def simple_get(query):
 
 def slice_up(query):
     query = query.lower()
-    num_results = 20
+    num_results = params.number_candidates_considered
     top_twitter_words = init_data()
     tweets = simple_get(query)
     split_tweets = clean_tweets(query, tweets)
@@ -80,16 +81,19 @@ def clean_tweets(query, tweets):
 
 
 def extract_top_results(query, num_results, capital_cnt, cnt, keys):
+    cap_freq = params.capitalization_frequency_cutoff
+    prop_heavy = params.proportion_of_heavy_candidates
+
     capital_frac = [(key, capital_cnt[key] * 1.0 / cnt[key]) for key in
                                                     capital_cnt if cnt[key] > 1]
-    capital_frac = [(a,b) for (a,b) in capital_frac if 0.5 <= b]
+    capital_frac = [(a,b) for (a,b) in capital_frac if cap_freq <= b]
     capital_frac.sort(key= lambda (a,b): -cnt[a])
 
     just_counts = [cnt[key] for key in keys]
 
     total_candidates = num_results
-    max_heavy_candidates = int(0.4 * total_candidates)
-    heavy_factor = 0.005
+    max_heavy_candidates = int(prop_heavy * total_candidates)
+    heavy_factor = params.counts_as_heavy_factor
 
     heavy_candidates = [key for key in cnt if (cnt[key] > heavy_factor *
                                                 sum(just_counts))]
@@ -129,12 +133,13 @@ def count_words_in_tweets(query, split_tweets, top_twitter_words):
     cnt = Counter()
     capital_cnt = Counter()
     query_words = query.lower().split()
+    min_len = params.minimum_word_length
     for split_tweet in split_tweets:
         for word in split_tweet:
             if (word.lower() not in low_information_words and
             re.search("[0-9\W]",word) is None and
             related([word.lower()],query_words) is not True and
-            len(word) > 2):
+            len(word) > min_len):
                 cnt[word.lower()] += 1
                 if len(re.findall("\A[A-Z]", word)) == 1:
                     capital_cnt[word.lower()] += 1

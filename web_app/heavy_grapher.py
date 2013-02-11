@@ -1,8 +1,10 @@
 import pages_getter
+import params
 import networkx as nx
 import twitter
 import itertools
 import random
+
 
 def compute_graph(query, top_results, tweets):
     G, call_backs = prescreen(query, top_results, tweets)
@@ -16,12 +18,13 @@ def compute_graph(query, top_results, tweets):
     random.shuffle(query_list)
     print "query list length"
     print len(query_list)
-    per_page = 15
+    per_page = params.call_backs_page_size
     pages_with_queries  = pages_getter.get_pages_of_tweets(searcher,
                                                          query_list,
                                                          page_nums,
                                                          per_page)
     for query, page in pages_with_queries:
+        relevance_threshold = params.relevance_threshold
         w1 = query.split()[0]
         w2 = query.split()[1]
 
@@ -29,7 +32,7 @@ def compute_graph(query, top_results, tweets):
             text = tweet[u'text'].lower()
             if text.find(w1) == -1 or text.find(w2) == -1:
                 page.remove(tweet)
-        if len(page) >= 10:
+        if len(page) >= relevance_threshold:
             for tweet in page:
                 text = tweet[u'text']
             G.add_edge(w1, w2, weight=1)
@@ -41,8 +44,7 @@ def prescreen(query, top_results, tweets):
     G.add_nodes_from(top_results)
     pairs = [(x,y) for (x,y) in itertools.product(top_results,
                                                     repeat = 2) if x < y ]
-
-    edge_threshold = 15
+    edge_threshold = params.edge_threshold
     call_backs = []
     for w1, w2 in pairs:
         pair_count = 0
