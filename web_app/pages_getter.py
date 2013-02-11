@@ -70,8 +70,6 @@ class TweetDownloader(threading.Thread):
             print " by thread: ", self.ident
 
 
-#query is an array of queries
-#page_nums is an array of page numbers
 def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=None, lite=False):
     if num_threads is None:
         num_threads = len(query)
@@ -87,39 +85,23 @@ def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=
     q = Queue()
     threads = []
 
-
-    # Create the threads and 'start' them.
-    # At this point, they are listening to the
-    # queue, waiting to consume
-
     for i in xrange(num_threads):
         thread = TweetDownloader(q, twitter_search, was_seen)
         thread.setDaemon(True)
         thread.start()
         threads.append(thread)
 
-    # We want to download one array for each page number,
-    # so we put every page number in the queue, and
-    # these will be processed by the threads
     for i in xrange(len(query)):
         q.put((query[i], page_nums[i], per_page))
 
-    # Wait for all entries in the queue
-    # to be processed by our threads
-    # One could do a queue.join() here,
-    # but I prefer to use a loop and a timeout
     while not q.empty():
         time.sleep(1.0)
 
-    # Terminate the threads once our
-    # queue has been fully processed
     for thread in threads:
         thread.stop()
     for thread in threads:
         thread.join()
 
-    # Collect all downloaded documents
-    # from our threads
     pages = []
     for thread in threads:
         pages.extend(thread.get_pages())
