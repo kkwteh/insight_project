@@ -98,14 +98,3 @@ def get_pages_of_tweets(twitter_search, query, page_nums, per_page, num_threads=
         pages.extend(thread.get_pages())
 
     return pages
-
-
-def seer():
-    the_list = set()
-    def f(word):
-        if word in the_list:
-            return True
-        else:
-            the_list.add(word)
-            return False
-    return f
