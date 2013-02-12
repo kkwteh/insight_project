@@ -55,6 +55,11 @@ iframe.slides{
 	font-size: 1.5em;
 }
 
+a.column_bottom{
+	float: right;
+	font-size: 1em;
+}
+
 .navbar-form{
 	margin-right: 10px;
 	background: url(/static/search.png) no-repeat scroll right center;

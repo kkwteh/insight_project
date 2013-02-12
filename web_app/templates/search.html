@@ -37,10 +37,15 @@
 								{% for id in column %}
 									<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
 								{% endfor %}
+								<a class="pretty-link column_bottom"
+														href="/refine?q={{query}}&filter={{cliques[loop.index0]}}&page=1&ids={{clusters_all[loop.index0]}}">
+														more like this
+								</a>
 							</div>
 					  {% endfor %}
 					</div> <!-- /row -->
 				</div> <!-- /row -->
+
 			</div>
 		</div>
 	</div>
