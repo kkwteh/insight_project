@@ -31,6 +31,7 @@ def search():
         preview_length = params.preview_column_length
         preview_ids = [column[:preview_length] for column in cluster_ids_all]
 
+    print clique_strings
     return render_template('search.html',
                             query= query,
                             count= count,
