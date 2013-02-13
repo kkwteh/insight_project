@@ -51,7 +51,7 @@ def analyze(query, tweets, count, top_results):
 def jsony(G, count):
     nodes, edges = [], []
     for node in G.nodes():
-        nodes.append({"name": "{}: {}".format(node, count[node])})
+        nodes.append({"name": "{}".format(node)})
 
     for edge in G.edges():
         source, target = edge[0], edge[1]
