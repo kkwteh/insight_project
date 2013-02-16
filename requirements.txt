@@ -3,6 +3,7 @@ Jinja2==2.6
 PyYAML==3.10
 Werkzeug==0.8.3
 distribute==0.6.31
+gunicorn==0.17.2
 networkx==1.7
 nltk==2.0.4
 pymongo==2.4.2
