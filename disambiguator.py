@@ -3,6 +3,7 @@
 
 import clusterer
 import tweet_slicer
+import sim_data
 import params
 import recommender
 import json
@@ -18,6 +19,27 @@ app = Flask(__name__)
 @app.route('/search')
 def search():
     query = request.args.get('q')
+
+    if sim == True:
+        (query,
+        preview_ids,
+        clique_strings,
+        G,
+        cluster_ids_all,
+        all_ids) = (sim_data.query,
+                    sim_data.preview_ids,
+                    sim_data.clique_strings,
+                    sim_data.G,
+                    sim_data.cluster_ids_all,
+                    sim_data.all_ids)
+        return render_template('search.html',
+                            query= query,
+                            recommendations= preview_ids,
+                            cliques= clique_strings,
+                            graph= G,
+                            clusters_all= cluster_ids_all,
+                            all_ids= all_ids)
+
     if query == u'':
         return render_template('index.html')
     else:
@@ -101,12 +123,17 @@ def about():
 
 if '__main__' == __name__:
     args = sys.argv[1:]
+    debug = False
+    sim = False
     if not args:
-        debug = False
+        pass
     elif args[0] == '--debug':
         debug = True
+    elif args[0] == '--sim':
+        sim = True
+        debug = True
     else:
-        print 'usage: [--debug]'
+        print 'usage: [--debug, --fake]'
         sys.exit(1)
 
     if debug == False:
