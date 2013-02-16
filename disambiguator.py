@@ -3,7 +3,8 @@
 
 import clusterer
 import tweet_slicer
-import sim_data
+import sim_data.c_sharp
+import sim_data.python
 import params
 import recommender
 import json
@@ -20,26 +21,22 @@ def search():
     query = request.args.get('q')
     try:
         if sim == True:
-            (query,
+            (sim_query,
             preview_ids,
             clique_strings,
             G,
             cluster_ids_all,
-            all_ids) = (sim_data.query,
-                        sim_data.preview_ids,
-                        sim_data.clique_strings,
-                        sim_data.G,
-                        sim_data.cluster_ids_all,
-                        sim_data.all_ids)
+            all_ids) = get_my_sim_data(query)
             return render_template('search.html',
-                                query= query,
+                                query= sim_query,
                                 recommendations= preview_ids,
                                 cliques= clique_strings,
                                 graph= G,
                                 clusters_all= cluster_ids_all,
                                 all_ids= all_ids)
     except NameError:
-        #sim not defined, continue with full application
+        #sim not defined, which means app was run with gunicorn continue with
+        #full application
         pass
 
     if query == u'':
@@ -122,6 +119,23 @@ def graph():
 def about():
     return render_template('about.html')
 
+
+
+def get_my_sim_data(query):
+    if query == 'python':
+        return (sim_data.python.query,
+                    sim_data.python.preview_ids,
+                    sim_data.python.clique_strings,
+                    sim_data.python.G,
+                    sim_data.python.cluster_ids_all,
+                    sim_data.python.all_ids)
+    else:
+        return (sim_data.c_sharp.query,
+                    sim_data.c_sharp.preview_ids,
+                    sim_data.c_sharp.clique_strings,
+                    sim_data.c_sharp.G,
+                    sim_data.c_sharp.cluster_ids_all,
+                    sim_data.c_sharp.all_ids)
 
 if '__main__' == __name__:
     args = sys.argv[1:]
