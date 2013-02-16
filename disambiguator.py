@@ -15,30 +15,32 @@ from flask import request
 
 app = Flask(__name__)
 
-
 @app.route('/search')
 def search():
     query = request.args.get('q')
-
-    if sim == True:
-        (query,
-        preview_ids,
-        clique_strings,
-        G,
-        cluster_ids_all,
-        all_ids) = (sim_data.query,
-                    sim_data.preview_ids,
-                    sim_data.clique_strings,
-                    sim_data.G,
-                    sim_data.cluster_ids_all,
-                    sim_data.all_ids)
-        return render_template('search.html',
-                            query= query,
-                            recommendations= preview_ids,
-                            cliques= clique_strings,
-                            graph= G,
-                            clusters_all= cluster_ids_all,
-                            all_ids= all_ids)
+    try:
+        if sim == True:
+            (query,
+            preview_ids,
+            clique_strings,
+            G,
+            cluster_ids_all,
+            all_ids) = (sim_data.query,
+                        sim_data.preview_ids,
+                        sim_data.clique_strings,
+                        sim_data.G,
+                        sim_data.cluster_ids_all,
+                        sim_data.all_ids)
+            return render_template('search.html',
+                                query= query,
+                                recommendations= preview_ids,
+                                cliques= clique_strings,
+                                graph= G,
+                                clusters_all= cluster_ids_all,
+                                all_ids= all_ids)
+    except NameError:
+        #sim not defined, continue with full application
+        pass
 
     if query == u'':
         return render_template('index.html')
