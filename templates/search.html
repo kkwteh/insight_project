@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="row">
+		<div class="span12">
+			<div class="hide_seek">
+				<div class = "row">
+					<div class="span6">
+						<h4 class="recs_title">
+							Results for <strong>{{query}}</strong> as in...
+						</h4>
+					</div>
+					<div class="span6">
+						<span id="how_recs">
+							<a class="pretty-link" href="/graph?G={{graph}}">How were these suggestions generated?</a> <a class="all_tweets"href="/refine?q={{query}}&filter='&page=1&ids={{all_ids}}">
+							Show All Tweets
+						</a></span>
+					</div>
+				</div>
+
+				<div class="row">
+					{% for column in recommendations %}
+						<div class="span3 offset1">
+							<div class="category-wrapper">
+								<strong> <a class="pretty-link clique"
+														href="/refine?q={{query}}&filter={{cliques[loop.index0]}}&page=1&ids={{clusters_all[loop.index0]}}">
+														{{cliques[loop.index0]}}
+								</a> </strong>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+
+				<div class="row recommendations">
+					<div class = "row">
+						{% for column in recommendations %}
+							<div class="span3 offset1 recommendation_list">
+								{% for id in column %}
+									<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
+								{% endfor %}
+								<a class="pretty-link column_bottom"
+														href="/refine?q={{query}}&filter={{cliques[loop.index0]}}&page=1&ids={{clusters_all[loop.index0]}}">
+														more like this
+								</a>
+							</div>
+					  {% endfor %}
+					</div> <!-- /row -->
+				</div> <!-- /row -->
+
+			</div>
+		</div>
+	</div>
+
+
+	<div class="debug">
+			<div class="row">
+				<div class="span12">
+					<strong> Word count for {{query}} </strong>
+					<br> </br>
+					<strong> Total number of words: {{len}}</strong>
+				{% for key in keys %}
+			    <span class=count>{{ key }} {{ count[key] }} </span>
+			  {% endfor %}
+				</div>
+			</div>
+	</div>
+{% endblock %}

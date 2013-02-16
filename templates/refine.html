@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+	<div class="row">
+		<div class="span6 offset3">
+			{% if page_ids != [] %}
+				<h1 class="results_title"> Results for <strong>{{query}}</strong>
+				{% if filter != "'" %}
+					as in {{filter}}
+				{% endif %}
+				</h1>
+				{% for id in page_ids %}
+					<blockquote class="twitter-tweet"><a href="https://twitter.com/twitterapi/status/{{id}}"></a></blockquote>
+			  {% endfor %}
+				{% if next_page != -1 %}
+					<a class=" next_link" href="/refine?q={{query}}&filter={{filter}}&page={{next_page}}&ids={{ids}}">
+							Next Page
+					</a>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div> <!-- /row -->
+{% endblock %}
