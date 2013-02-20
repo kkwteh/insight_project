@@ -132,11 +132,8 @@ if '__main__' == __name__:
         pass
     elif args[0] == '--debug':
         debug = True
-    elif args[0] == '--sim':
-        sim = True
-        debug = True
     else:
-        print 'usage: [--debug, --fake]'
+        print 'usage: [--debug]'
         sys.exit(1)
 
     if debug == False:
