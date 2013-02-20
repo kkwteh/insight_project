@@ -21,23 +21,15 @@ app = Flask(__name__)
 def search():
     query = request.args.get('q')
 
-    if query == 'ninja' or query == 'hots' or query == 'backbone':
-        (sim_query,
-        preview_ids,
+    if query == u'':
+        return render_template('index.html')
+    elif query == 'ninja' or query == 'hots' or query == 'backbone':
+        (preview_ids,
         clique_strings,
         G,
         cluster_ids_all,
         all_ids) = get_my_sim_data(query)
-        return render_template('search.html',
-                            query= sim_query,
-                            recommendations= preview_ids,
-                            cliques= clique_strings,
-                            graph= G,
-                            clusters_all= cluster_ids_all,
-                            all_ids= all_ids)
 
-    if query == u'':
-        return render_template('index.html')
     else:
         tweets, count, keys, top_results = tweet_slicer.slice_up(query)
         ids_kept = params.ids_kept_per_cluster
@@ -51,16 +43,12 @@ def search():
 
     print clique_strings
     return render_template('search.html',
-                            query= query,
-                            count= count,
-                            keys= keys,
-                            len= len(keys),
-                            recommendations= preview_ids,
-                            cliques= clique_strings,
-                            graph= G,
-                            clusters_all= cluster_ids_all,
-                            all_ids= all_ids)
-
+                        query= query,
+                        recommendations= preview_ids,
+                        cliques= clique_strings,
+                        graph= G,
+                        clusters_all= cluster_ids_all,
+                        all_ids= all_ids)
 
 @app.route('/refine')
 def refine():
@@ -116,30 +104,25 @@ def graph():
 def about():
     return render_template('about.html')
 
-
-
 def get_my_sim_data(query):
     if query == 'ninja':
-        return (sim_data.ninja.query,
-                    sim_data.ninja.preview_ids,
-                    sim_data.ninja.clique_strings,
-                    sim_data.ninja.G,
-                    sim_data.ninja.cluster_ids_all,
-                    sim_data.ninja.all_ids)
+        return (sim_data.ninja.preview_ids,
+                sim_data.ninja.clique_strings,
+                sim_data.ninja.G,
+                sim_data.ninja.cluster_ids_all,
+                sim_data.ninja.all_ids)
     elif query == 'hots':
-        return (sim_data.hots.query,
-                    sim_data.hots.preview_ids,
-                    sim_data.hots.clique_strings,
-                    sim_data.hots.G,
-                    sim_data.hots.cluster_ids_all,
-                    sim_data.hots.all_ids)
+        return (sim_data.hots.preview_ids,
+                sim_data.hots.clique_strings,
+                sim_data.hots.G,
+                sim_data.hots.cluster_ids_all,
+                sim_data.hots.all_ids)
     elif query == 'backbone':
-        return (sim_data.backbone.query,
-                    sim_data.backbone.preview_ids,
-                    sim_data.backbone.clique_strings,
-                    sim_data.backbone.G,
-                    sim_data.backbone.cluster_ids_all,
-                    sim_data.backbone.all_ids)
+        return (sim_data.backbone.preview_ids,
+                sim_data.backbone.clique_strings,
+                sim_data.backbone.G,
+                sim_data.backbone.cluster_ids_all,
+                sim_data.backbone.all_ids)
 
 if '__main__' == __name__:
     args = sys.argv[1:]
