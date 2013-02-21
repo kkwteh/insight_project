@@ -20,6 +20,7 @@ app = Flask(__name__)
 @app.route('/search')
 def search():
     query = request.args.get('q')
+    query,lang = get_lang(query)
 
     if query == u'':
         return render_template('index.html')
@@ -31,11 +32,12 @@ def search():
         all_ids) = get_my_sim_data(query)
 
     else:
-        tweets, count, keys, top_results = tweet_slicer.slice_up(query)
+        tweets, count, keys, top_results = tweet_slicer.slice_up(query, lang)
         ids_kept = params.ids_kept_per_cluster
         all_ids = [t['id'] for t in tweets][:ids_kept]
         tweets_text = [t['text'] for t in tweets]
-        cliques, G = clusterer.analyze(query, tweets_text, count, top_results)
+        cliques, G = clusterer.analyze(query, tweets_text, count, top_results,
+                                                                         lang)
         cluster_ids_all, clique_strings = recommender.find(tweets, cliques)
         cluster_ids_all = [col[:ids_kept] for col in cluster_ids_all]
         preview_length = params.preview_column_length
@@ -124,18 +126,35 @@ def get_my_sim_data(query):
                 sim_data.backbone.cluster_ids_all,
                 sim_data.backbone.all_ids)
 
+
+def get_lang(query):
+    es_code = "lang:es"
+    query_words = query.split()
+    if es_code in query_words:
+        query_words.remove(es_code)
+        query = ' '.join(query_words)
+        return query, 'es'
+    else:
+        return query, 'en'
+
+
 if '__main__' == __name__:
     args = sys.argv[1:]
     debug = False
-    sim = False
+    ip = False
     if not args:
         pass
     elif args[0] == '--debug':
         debug = True
+    elif args[0] == '--ip':
+        ip = True
     else:
-        print 'usage: [--debug]'
+        print 'usage: [--debug, --ip]'
         sys.exit(1)
 
+    if ip == True:
+        ip_address = "0.0.0.0"
+        app.run(host=ip_address, port=5000)
     if debug == False:
         port = int(os.environ.get('PORT', 5000))
         app.run(host="0.0.0.0", port=port)

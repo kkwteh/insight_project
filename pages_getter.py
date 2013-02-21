@@ -20,21 +20,22 @@ def init_twitter():
                     OAuth_creds[3]))
 
 
-def download_page(twitter_search, query, page_num, per_page):
+def download_page(twitter_search, query, page_num, per_page, lang):
     if page_num != None:
-        page = twitter_search.search(q=query, lang="en", page=page_num,                                             rpp=per_page)['results']
+        page = twitter_search.search(q=query, lang=lang, page=page_num,                                             rpp=per_page)['results']
 
         print "Successfully downloaded page ", page_num
         return page
 
 
 class TweetDownloader(threading.Thread):
-    def __init__(self, queue, twitter_search):
+    def __init__(self, queue, twitter_search, lang):
         threading.Thread.__init__(self)
         self._stop = threading.Event()
         self.pages = []
         self.queue = queue
         self.twitter_search = twitter_search
+        self.lang = lang
 
     def stop(self):
         self._stop.set()
@@ -55,19 +56,19 @@ class TweetDownloader(threading.Thread):
 
             query, page_num, per_page = self.queue.get()
             page = download_page(self.twitter_search, query, page_num,
-                                            per_page)
+                                            per_page, self.lang)
             self.pages.append((query,page))
             print "Successfully processed page_num: ", page_num,
             print " by thread: ", self.ident
 
 
-def get_pages_of_tweets(twitter_search, query, page_nums, per_page):
+def get_pages_of_tweets(twitter_search, query, page_nums, per_page, lang):
     num_threads=len(query)
     q = Queue()
     threads = []
 
     for i in xrange(num_threads):
-        thread = TweetDownloader(q, twitter_search)
+        thread = TweetDownloader(q, twitter_search, lang)
         thread.setDaemon(True)
         thread.start()
         threads.append(thread)

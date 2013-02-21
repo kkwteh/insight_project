@@ -42,8 +42,8 @@ def total_weight(clique,count):
     return sum([count[w] for w in clique])
 
 
-def analyze(query, tweets, count, top_results):
-    G = heavy_grapher.compute_graph(query, top_results, tweets)
+def analyze(query, tweets, count, top_results, lang):
+    G = heavy_grapher.compute_graph(query, top_results, tweets, lang)
     hot_sets = heavy_clusters(G, count, top_results)
     return hot_sets, jsony(G, count)
 

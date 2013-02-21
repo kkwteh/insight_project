@@ -22,13 +22,16 @@ from nltk.corpus import wordnet as wn
 from nltk.stem import PorterStemmer
 
 
-def init_data():
-    top_pairs = top_words_data.pairs
+def init_data(lang):
+    if lang == "en":
+        top_pairs = top_words_data.pairs
+    elif lang == "es":
+        top_pairs = top_words_data.es_pairs
     top_words = [pair[0] for pair in top_pairs]
     return top_words
 
 
-def simple_get(query):
+def simple_get(query, lang):
     twitter_search = pages_getter.init_twitter()
     num_pages = 15
     per_page = 100
@@ -37,17 +40,18 @@ def simple_get(query):
     pages_with_queries = pages_getter.get_pages_of_tweets(twitter_search,
                                                             query_list,
                                                             page_nums,
-                                                            per_page)
+                                                            per_page,
+                                                            lang)
     pages = [pair[1] for pair in pages_with_queries]
     tweets = flatten(pages)
     return tweets
 
 
-def slice_up(query):
+def slice_up(query, lang):
     query = query.lower()
     num_results = params.number_candidates_considered
-    top_twitter_words = init_data()
-    tweets = simple_get(query)
+    top_twitter_words = init_data(lang)
+    tweets = simple_get(query, lang)
     split_tweets = clean_tweets(query, tweets)
     capital_count, count, keys = count_words_in_tweets(query,
                                                 split_tweets,

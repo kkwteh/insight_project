@@ -6,7 +6,7 @@ import itertools
 import random
 
 
-def compute_graph(query, top_results, tweets):
+def compute_graph(query, top_results, tweets, lang):
     G, call_backs = prescreen(query, top_results, tweets)
     searcher = pages_getter.init_twitter()
     pairs = call_backs
@@ -22,7 +22,8 @@ def compute_graph(query, top_results, tweets):
     pages_with_queries  = pages_getter.get_pages_of_tweets(searcher,
                                                          query_list,
                                                          page_nums,
-                                                         per_page)
+                                                         per_page,
+                                                         lang)
     for query, page in pages_with_queries:
         relevance_threshold = params.relevance_threshold
         w1 = query.split()[0]
