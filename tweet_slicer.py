@@ -71,7 +71,7 @@ def flatten(pages):
 def clean_tweets(query, tweets):
     split_tweets = sets.Set()
     query_words = query.split()
-
+    tweets = uniq_on_id(tweets)
     for tweet in tweets[:]:
         if related([tweet['text'].lower()], query_words):
             tweet['text'] = re.sub("\ART", "", tweet['text'])
@@ -83,6 +83,14 @@ def clean_tweets(query, tweets):
             tweets.remove(tweet)
     return list(split_tweets)
 
+def uniq_on_id(tweets):
+    ids_seen = []
+    uniq_ids_tweets = []
+    for tweet in tweets:
+        if tweet['from_user_id'] not in ids_seen:
+            ids_seen.append(tweet['from_user_id'])
+            uniq_ids_tweets.append(tweet)
+    return uniq_ids_tweets
 
 def extract_top_results(query, num_results, capital_cnt, cnt, keys):
     cap_freq = params.capitalization_frequency_cutoff
