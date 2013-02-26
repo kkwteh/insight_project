@@ -23,6 +23,6 @@ def compute_graph(query, top_results, tweets, lang):
             if text.count(w1) > 0 and text.count(w2) > 0:
                 pair_count += 1
         proportion_cooccur = 1.0*pair_count/min(w1_count,w2_count)
-        if proportion_cooccur > 0.2:
+        if proportion_cooccur > 0.25:
             G.add_edge(w1, w2, weight=1)
     return G
