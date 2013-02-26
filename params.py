@@ -13,5 +13,4 @@ proportion_of_heavy_candidates = 0.4
 counts_as_heavy_factor = 0.005
 minimum_word_length = 3
 
-edge_threshold = 15
-relevance_threshold = 10
+proportion_cooccurrence_threshold = 0.25
