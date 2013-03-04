@@ -19,6 +19,16 @@ app = Flask(__name__)
 
 @app.route('/search')
 def search():
+    """
+    search()
+    1) reads the query
+    2) obtains the tweets and word counts via tweet_slicer
+    3) obtains identifying keywords for clusters via clusterer
+    4) sorts tweets into clusters via recommender
+    5) renders results in browser
+    Note: If query is one of three "backup" queries, steps 2-4 are skipped and
+    cached simulation data is loaded and displayed instead
+    """
     query = request.args.get('q')
     query,lang = get_lang(query)
 
@@ -51,6 +61,39 @@ def search():
                         graph= G,
                         clusters_all= cluster_ids_all,
                         all_ids= all_ids)
+
+
+def get_my_sim_data(query):
+    if query == 'ninja':
+        return (sim_data.ninja.preview_ids,
+                sim_data.ninja.clique_strings,
+                sim_data.ninja.G,
+                sim_data.ninja.cluster_ids_all,
+                sim_data.ninja.all_ids)
+    elif query == 'hots':
+        return (sim_data.hots.preview_ids,
+                sim_data.hots.clique_strings,
+                sim_data.hots.G,
+                sim_data.hots.cluster_ids_all,
+                sim_data.hots.all_ids)
+    elif query == 'backbone':
+        return (sim_data.backbone.preview_ids,
+                sim_data.backbone.clique_strings,
+                sim_data.backbone.G,
+                sim_data.backbone.cluster_ids_all,
+                sim_data.backbone.all_ids)
+
+
+def get_lang(query):
+    es_code = "lang:es"
+    query_words = query.split()
+    if es_code in query_words:
+        query_words.remove(es_code)
+        query = ' '.join(query_words)
+        return query, 'es'
+    else:
+        return query, 'en'
+
 
 @app.route('/refine')
 def refine():
@@ -105,37 +148,6 @@ def graph():
 @app.route('/about')
 def about():
     return render_template('about.html')
-
-def get_my_sim_data(query):
-    if query == 'ninja':
-        return (sim_data.ninja.preview_ids,
-                sim_data.ninja.clique_strings,
-                sim_data.ninja.G,
-                sim_data.ninja.cluster_ids_all,
-                sim_data.ninja.all_ids)
-    elif query == 'hots':
-        return (sim_data.hots.preview_ids,
-                sim_data.hots.clique_strings,
-                sim_data.hots.G,
-                sim_data.hots.cluster_ids_all,
-                sim_data.hots.all_ids)
-    elif query == 'backbone':
-        return (sim_data.backbone.preview_ids,
-                sim_data.backbone.clique_strings,
-                sim_data.backbone.G,
-                sim_data.backbone.cluster_ids_all,
-                sim_data.backbone.all_ids)
-
-
-def get_lang(query):
-    es_code = "lang:es"
-    query_words = query.split()
-    if es_code in query_words:
-        query_words.remove(es_code)
-        query = ' '.join(query_words)
-        return query, 'es'
-    else:
-        return query, 'en'
 
 
 if '__main__' == __name__:
